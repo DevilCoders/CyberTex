@@ -1,0 +1,37 @@
+# SAPL red-team helper showcase
+
+SET privilege_escalation = redteam_objective(
+    "Gain domain admin",
+    tactics=["TA0004", "TA0005"],
+    detections=["SIEM correlation rule 12"],
+    impact="domain dominance",
+)
+
+SET persistence = redteam_objective(
+    "Establish stealth persistence",
+    tactics=["TA0003"],
+    detections=["blue-team containment"],
+)
+
+SET campaign = redteam_campaign(
+    "Purple team drill",
+    [privilege_escalation, persistence],
+    operators=["casey", "jamie"],
+    notes=["Coordinate tabletop after each objective"],
+)
+
+SET emulation = redteam_emulation_matrix({
+    "TA0004": ["T1068", "T1484"],
+    "TA0005": ["T1078"],
+})
+
+TASK "Red-team sync":
+    "Review campaign goals prior to launch"
+    NOTE "Objectives planned: {len(campaign['objectives'])}"
+    NOTE "Operators assigned: {', '.join(campaign['operators'])}"
+    NOTE "Mapped tactics: {', '.join(emulation['mapping'].keys())}"
+
+REPORT "reports/redteam-briefing.md" USING {
+    "campaign": campaign,
+    "emulation": emulation,
+}

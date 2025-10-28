@@ -1,0 +1,21 @@
+"""Plan cross-platform deployment and installation steps."""
+
+SET targets = ["linux", "macos", "windows"]
+
+TASK "Cross-platform installation guide":
+    FOR platform IN targets:
+        IF platform == "linux":
+            NOTE "Install via apt/yum and run python -m sapl --help"
+        ELIF platform == "macos":
+            NOTE "Install via Homebrew and verify virtual environment"
+        ELSE:
+            NOTE "Use PowerShell installer and activate .\\.venv"
+    NOTE "Refer to docs/INSTALLATION.md for full instructions"
+
+TASK "Compilation overview":
+    NOTE "Compile from source using python -m sapl compile script.sapl"
+    NOTE "See docs/COMPILATION_FROM_SOURCE.md for CI-friendly instructions"
+
+TASK "Testing workflow":
+    NOTE "Run sapl-test before distributing artifacts"
+    NOTE "Command: python -m sapl test tests/ --json"

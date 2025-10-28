@@ -1,0 +1,15 @@
+"""Outline GUI and CLI packaging strategies for SAPL workflows."""
+
+TASK "CLI packaging":
+    NOTE "Transpile workflow: python -m sapl compile scripts/scan.sapl --target python"
+    NOTE "Bundle CLI using shiv or pyinstaller"
+    NOTE "Ship sapl-required.yaml alongside executable"
+
+TASK "GUI packaging":
+    NOTE "Embed transpiled SAPL module inside PySide6 or Tkinter app"
+    NOTE "Capture results via task outputs and present in widgets"
+    NOTE "See docs/GUI_AND_CLI_COMPILATION.md for detailed steps"
+
+TASK "Plugin ecosystem":
+    NOTE "Document available plugins in docs/PLUGINS.md"
+    NOTE "Expose plugin discovery via --plugin-dir"

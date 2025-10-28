@@ -1,0 +1,34 @@
+# SAPL blue-team helper showcase
+
+SET edr_event = blueteam_log_event(
+    "EDR flagged credential dumping pattern",
+    severity="critical",
+    source="endpoint-01",
+    tags=["credential", "lateral"],
+    context={"host": "fileserver-02", "process": "procdump.exe"},
+)
+
+SET readiness = blueteam_readiness(0.74, ["weekly tabletop complete", "hunt backlog cleared"])
+
+SET ir_playbook = blueteam_playbook(
+    "Credential theft containment",
+    steps=[
+        "Quarantine affected host",
+        "Reset impacted credentials",
+        "Review outbound authentication logs",
+    ],
+    objectives=["contain incident", "preserve evidence"],
+)
+
+TASK "Blue-team coordination":
+    "Share latest telemetry and readiness metrics"
+    NOTE "Event description: {edr_event['description']}"
+    NOTE "Event severity: {edr_event['severity']} from {edr_event['source']}"
+    NOTE "Readiness score: {readiness['score']}"
+    OUTPUT "Document {len(ir_playbook['steps'])} containment actions"
+
+REPORT "reports/blueteam-briefing.md" USING {
+    "events": [edr_event],
+    "readiness": readiness,
+    "playbooks": [ir_playbook],
+}

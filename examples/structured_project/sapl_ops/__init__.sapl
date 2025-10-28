@@ -1,0 +1,15 @@
+"""Facade for the structured SAPL helpers."""
+
+IMPORT sapl_ops.entities AS entities
+IMPORT sapl_ops.reports AS reports
+
+DEF load_services():
+    """Instantiate reusable service definitions."""
+    RETURN [
+        entities.HTTPService("portal", 8080),
+        entities.HTTPService("api", 8443, bind="127.0.0.1"),
+    ]
+
+DEF summarise(targets):
+    """Build a quick engagement summary for *targets*."""
+    RETURN reports.render_report(load_services(), targets)

@@ -1,0 +1,13 @@
+"""Demonstrate compiling SAPL into multiple target languages"""
+
+SET project = "polyglot"
+
+DEF summarise(payload):
+    NOTE "Summarising payload" DETAILS payload
+    RETURN payload
+
+TASK "Polyglot Build":
+    NOTE "Project" DETAILS project
+    NOTE "Invoke summarise" DETAILS summarise({"status": "ok"})
+
+RETURN "ready"

@@ -1,0 +1,17 @@
+# Core runtime dependencies bundled with SAPL projects
+runtime:
+  - python>=3.11
+  - asyncio
+  - http.server
+
+# Tooling useful for SAPL development
+tooling:
+  - pytest
+  - rich
+  - mypy
+
+# Recommended optional packages for security workflows
+security:
+  - requests
+  - cryptography
+  - scapy

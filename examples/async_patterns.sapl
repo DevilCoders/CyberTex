@@ -1,0 +1,23 @@
+"""Demonstrates asynchronous execution and lambda helpers."""
+
+IMPORT asyncio
+
+TARGET ["https://api.cybertex.local"]
+SCOPE ["api.cybertex.local"]
+
+ASYNC DEF fetch_status(host):
+    NOTE "Fetching status for {host}"
+    RETURN await asyncio.sleep(0.1, result={"host": host, "status": "ok"})
+
+ASYNC DEF gather_statuses(hosts):
+    coroutines = [fetch_status(host) FOR host IN hosts]
+    RETURN await asyncio.gather(*coroutines)
+
+SET summarise = lambda record, prefix="status": f"{prefix}:{record['host']}={record['status']}"
+
+ASYNC DEF main():
+    results = await gather_statuses(targets)
+    summaries = [summarise(result) FOR result IN results]
+    OUTPUT "Summaries: {summaries}"
+
+AWAIT main()

@@ -1,0 +1,13 @@
+"""Entry point for the structured SAPL demo project."""
+
+IMPORT sapl_ops AS ops
+FROM sapl_ops.entities IMPORT HTTPService
+
+SET analyst_team = ["casey", "devon", "mira"]
+SET services = ops.load_services()
+SET summary = ops.summarise(["https://portal.cybertex.local"])
+OUTPUT "Analysts: {analyst_team}"
+OUTPUT "Services prepared: {[service.describe() FOR service IN services]}"
+
+SET preview = HTTPService("static", 8080, bind="0.0.0.0")
+OUTPUT preview.describe()
