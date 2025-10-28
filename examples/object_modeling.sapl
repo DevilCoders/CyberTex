@@ -1,0 +1,35 @@
+"""Illustrates object-oriented features, inheritance, and polymorphism."""
+
+TARGET ["https://purple.cybertex.local"]
+SCOPE ["purple.cybertex.local"]
+
+CLASS TaskPlan:
+    """Base class encapsulating shared reporting helpers."""
+
+    DEF __init__(self, name, description):
+        self.name = name
+        self.description = description
+
+    DEF execute(self):
+        RAISE NotImplementedError("Subclasses must implement execute()")
+
+CLASS BlueTask(TaskPlan):
+    DEF execute(self):
+        NOTE "[Blue] {self.name}: {self.description}"
+
+CLASS RedTask(TaskPlan):
+    DEF execute(self):
+        NOTE "[Red] {self.name}: {self.description}"
+
+CLASS PurpleTask(TaskPlan):
+    DEF execute(self):
+        NOTE "[Purple] {self.name}: {self.description}"
+
+SET catalogue = [
+    BlueTask("Log review", "Monitor defensive telemetry"),
+    RedTask("Phishing simulation", "Exercise staff awareness"),
+    PurpleTask("Joint retro", "Align learnings"),
+]
+
+FOR task IN catalogue:
+    task.execute()

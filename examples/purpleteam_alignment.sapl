@@ -1,0 +1,45 @@
+"""Purple-team alignment playbook"""
+
+IMPORT sapl.stdlib.extended AS helpers
+
+PLAYBOOK = helpers.blueteam_playbook(
+    "Phishing response",
+    steps=[
+        "Triage alert",
+        "Contain mailbox",
+        "Reset credentials",
+    ],
+    owner="SOC",
+)
+
+OBJECTIVE = helpers.redteam_objective(
+    "Simulate spear-phish",
+    tactics=["TA0001", "TA0002"],
+    detections=["Mailbox audit", "Endpoint sensor"],
+)
+
+ALIGNMENT = helpers.purpleteam_alignment(
+    campaign=helpers.redteam_campaign("Purple Exercises", [OBJECTIVE]),
+    readiness=helpers.blueteam_readiness(0.62, ["Playbook reviewed"]),
+    shared_metrics=["mean-time-detect", "detection-rate"],
+)
+
+EXERCISE = helpers.purpleteam_exercise_plan(
+    "Quarterly purple run",
+    objectives=[OBJECTIVE],
+    detections=[{"name": "Mailbox sensor"}],
+    facilitation=["Purple-team lead", "SOC supervisor"],
+    outcomes=["Document sensor gaps"],
+)
+
+SCORECARD = helpers.purpleteam_scorecard(
+    alignment=ALIGNMENT,
+    exercise=EXERCISE,
+    maturity=0.86,
+    notes=["Expand EDR coverage", "Automate phishing enrichment"],
+)
+
+TASK "Alignment Review":
+    NOTE "Purple-team campaign" DETAILS ALIGNMENT
+    NOTE "Exercise plan" DETAILS EXERCISE
+    NOTE "Scorecard" DETAILS SCORECARD

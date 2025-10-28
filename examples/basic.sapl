@@ -1,0 +1,49 @@
+# Example SAPL script demonstrating common constructs
+
+TARGET ["https://demo.cybertex.local", "https://api.cybertex.local"]
+SCOPE ["demo.cybertex.local", "api.cybertex.local"]
+
+IMPORT asyncio
+
+SET analysts = ["riley", "morgan"]
+SET service_ports = {80, 443, 8080}
+SET credentials = ("analyst", "hunter2")
+SET host_metadata = {"owner": "appsec", "priority": "high"}
+SET recon_hosts = [host FOR host IN targets IF "api" IN host]
+SET engagement_mode = "stealth" IF len(recon_hosts) < len(targets) ELSE "full"
+SET summarise_profile = lambda profile, tag="core": profile["host"] + ":" + tag
+ASYNC DEF fetch_profile(host):
+    RETURN await asyncio.sleep(0, result={"host": host, "status": "online"})
+SET host_profiles = [AWAIT fetch_profile(host) FOR host IN recon_hosts]
+SET profile_summaries = [summarise_profile(profile) FOR profile IN host_profiles]
+username, _ = credentials
+owner = host_metadata["owner"]
+PAYLOAD sql_injection = [
+    "' OR '1'='1",
+    "' UNION SELECT NULL--",
+    "admin' --",
+]
+
+FOR host IN targets:
+    TASK "Initial Recon for {host}":
+        "Document exposed surfaces before deeper enumeration"
+        OUTPUT "Recon kick-off for {host}"
+        PORTSCAN service_ports TOOL "nmap -sV {host}"
+        IF "api" IN host:
+            NOTE "Target exposes API endpoints"
+        NOTE "Stakeholder {owner} notified of scan window"
+        NOTE "Profiles evaluated {profile_summaries}"
+        HTTP GET "{host}/status" EXPECT 200
+
+TASK "Input Fuzzing":
+    "Exercise payload library against authenticated surface"
+    NOTE "Authenticating as {username}"
+    FUZZ "{target}/search?q=" METHOD GET USING sql_injection
+    FINDING medium "Potential SQLi vectors enumerated for {target}"
+
+IF FALSE:
+    INPUT "Override analyst handle: " AS analyst_override
+
+SET report_name = "-".join(analysts)
+RUN "whatweb {target}" SAVE AS fingerprint
+REPORT "reports/{report_name}-findings.md"

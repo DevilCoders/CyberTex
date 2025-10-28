@@ -1,0 +1,229 @@
+"""Curated standard library exposure for SAPL."""
+
+from __future__ import annotations
+
+import builtins
+import importlib
+import json
+import math
+import pathlib
+import random
+import secrets
+import statistics
+import textwrap
+import urllib.parse
+from functools import partial
+from typing import Any, Dict, Iterable, List
+
+from ..errors import RuntimeError as SAPLRuntimeError
+from .extended import EXTRA_FUNCTIONS
+
+
+BUILTIN_FUNCTION_NAMES = [
+    "abs",
+    "aiter",
+    "all",
+    "anext",
+    "any",
+    "ascii",
+    "bin",
+    "bool",
+    "breakpoint",
+    "bytearray",
+    "bytes",
+    "callable",
+    "chr",
+    "classmethod",
+    "compile",
+    "complex",
+    "delattr",
+    "dict",
+    "dir",
+    "divmod",
+    "enumerate",
+    "filter",
+    "float",
+    "format",
+    "frozenset",
+    "getattr",
+    "globals",
+    "hasattr",
+    "hash",
+    "help",
+    "hex",
+    "id",
+    "input",
+    "int",
+    "isinstance",
+    "issubclass",
+    "iter",
+    "len",
+    "list",
+    "locals",
+    "map",
+    "max",
+    "memoryview",
+    "min",
+    "next",
+    "object",
+    "oct",
+    "open",
+    "ord",
+    "pow",
+    "print",
+    "property",
+    "range",
+    "repr",
+    "reversed",
+    "round",
+    "set",
+    "setattr",
+    "slice",
+    "sorted",
+    "staticmethod",
+    "str",
+    "sum",
+    "super",
+    "tuple",
+    "type",
+    "vars",
+    "zip",
+]
+
+
+def _wrap_path_function(name: str):
+    method = getattr(pathlib.Path, name)
+
+    def wrapper(path: str, *args: Any, **kwargs: Any) -> Any:
+        return method(pathlib.Path(path), *args, **kwargs)
+
+    wrapper.__name__ = f"path_{name}"
+    return wrapper
+
+
+CUSTOM_FUNCTIONS: Dict[str, Any] = {
+    "json_loads": json.loads,
+    "json_dumps": partial(json.dumps, indent=2, sort_keys=True),
+    "json_pretty": lambda obj: json.dumps(obj, indent=2, sort_keys=True),
+    "math_hypot": math.hypot,
+    "math_prod": math.prod,
+    "math_isclose": math.isclose,
+    "stats_mean": statistics.mean,
+    "stats_median": statistics.median,
+    "stats_stdev": statistics.stdev,
+    "stats_variance": statistics.pvariance,
+    "random_choice": random.choice,
+    "random_choices": random.choices,
+    "random_randint": random.randint,
+    "random_sample": random.sample,
+    "random_uniform": random.uniform,
+    "secret_token_hex": secrets.token_hex,
+    "secret_token_bytes": secrets.token_bytes,
+    "secret_token_urlsafe": secrets.token_urlsafe,
+    "url_parse": urllib.parse.urlparse,
+    "url_join": urllib.parse.urljoin,
+    "url_encode": urllib.parse.urlencode,
+    "url_quote": urllib.parse.quote,
+    "url_unquote": urllib.parse.unquote,
+    "text_dedent": textwrap.dedent,
+    "text_indent": textwrap.indent,
+    "path_exists": _wrap_path_function("exists"),
+    "path_read_text": _wrap_path_function("read_text"),
+    "path_write_text": _wrap_path_function("write_text"),
+    "path_iterdir": lambda path: [child.as_posix() for child in pathlib.Path(path).iterdir()],
+    "path_glob": lambda path, pattern: [child.as_posix() for child in pathlib.Path(path).glob(pattern)],
+    "path_resolve": lambda path: pathlib.Path(path).resolve().as_posix(),
+    "math_degrees": math.degrees,
+    "math_radians": math.radians,
+    "math_factorial": math.factorial,
+    "stats_harmonic_mean": statistics.harmonic_mean,
+    "stats_geometric_mean": statistics.geometric_mean,
+}
+
+CUSTOM_FUNCTIONS.update(EXTRA_FUNCTIONS)
+
+
+STANDARD_LIBRARY_CATALOG: Dict[str, List[str]] = {
+    "core_os_services": ["os", "sys", "pathlib", "platform", "logging", "subprocess"],
+    "file_access": ["pathlib", "shutil", "tempfile", "glob"],
+    "data_persistence": ["json", "sqlite3", "configparser", "csv", "pickle"],
+    "data_types_math": ["math", "statistics", "decimal", "fractions", "itertools", "functools"],
+    "networking_internet": ["ipaddress", "socket", "ssl", "http.client", "urllib.parse", "urllib.request"],
+    "concurrent_execution": ["asyncio", "threading", "multiprocessing", "concurrent.futures"],
+    "development_tools": ["inspect", "dataclasses", "typing", "pprint"],
+    "text_processing": ["re", "textwrap", "difflib", "string", "html", "xml.etree.ElementTree"],
+    "exclusive_features": ["secrets", "hashlib", "hmac", "uuid", "zipfile", "tarfile"],
+}
+
+
+ALIAS_MODULES: Dict[str, str] = {
+    "core.os": "os",
+    "core.sys": "sys",
+    "core.path": "pathlib",
+    "core.logging": "logging",
+    "core.subprocess": "subprocess",
+    "files.path": "pathlib",
+    "files.temp": "tempfile",
+    "files.glob": "glob",
+    "data.json": "json",
+    "data.sqlite": "sqlite3",
+    "data.config": "configparser",
+    "data.csv": "csv",
+    "data.pickle": "pickle",
+    "math.statistics": "statistics",
+    "math.decimal": "decimal",
+    "math.fractions": "fractions",
+    "network.http": "http.client",
+    "network.urllib": "urllib.request",
+    "network.parse": "urllib.parse",
+    "network.ip": "ipaddress",
+    "network.socket": "socket",
+    "concurrency.asyncio": "asyncio",
+    "concurrency.threads": "threading",
+    "concurrency.processes": "multiprocessing",
+    "text.regex": "re",
+    "text.string": "string",
+    "text.html": "html",
+    "text.xml": "xml.etree.ElementTree",
+    "security.secrets": "secrets",
+    "security.hashlib": "hashlib",
+    "security.uuid": "uuid",
+}
+
+
+def _allowed_modules() -> Iterable[str]:
+    modules: set[str] = set()
+    for names in STANDARD_LIBRARY_CATALOG.values():
+        modules.update(names)
+    modules.update(ALIAS_MODULES.values())
+    return modules
+
+
+def load_builtins() -> Dict[str, Any]:
+    """Expose a curated set of built-in functions for SAPL programs."""
+
+    environment: Dict[str, Any] = {}
+    for name in BUILTIN_FUNCTION_NAMES:
+        value = getattr(builtins, name, None)
+        if callable(value):
+            environment[name] = value
+    environment.update(CUSTOM_FUNCTIONS)
+    return environment
+
+
+def import_module(path: List[str]):
+    """Import a whitelisted module by path."""
+
+    dotted = ".".join(path)
+    target = ALIAS_MODULES.get(dotted, dotted)
+    if target not in _allowed_modules():
+        raise SAPLRuntimeError(f"Module '{dotted}' is not part of the SAPL standard library")
+    return importlib.import_module(target)
+
+
+def module_public_names(module: Any) -> List[str]:
+    """Return the publicly visible names of a module."""
+
+    if hasattr(module, "__all__"):
+        return list(module.__all__)
+    return [name for name in dir(module) if not name.startswith("_")]

@@ -1,0 +1,11 @@
+"""Reporting helpers for structured SAPL projects."""
+
+DEF render_report(services, targets):
+    details = [service.to_dict() for service IN services]
+    RETURN {
+        "targets": targets,
+        "services": details,
+    }
+
+DEF describe_targets(targets):
+    RETURN [target.upper() for target IN targets]

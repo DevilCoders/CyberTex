@@ -1,0 +1,44 @@
+"""Showcases flow control, exception handling, and conditional expressions."""
+
+TARGET ["https://infra.cybertex.local"]
+SCOPE ["infra.cybertex.local"]
+
+SET escalation_paths = {
+    "low": ["log"],
+    "medium": ["log", "notify"],
+    "high": ["log", "notify", "escalate"],
+}
+
+ASYNC DEF notify_async(channel, message):
+    NOTE "Async notification via {channel}: {message}"
+
+DEF handle_finding(severity, finding):
+    ##
+    Flow control example that branches based on severity.
+    Demonstrates TRY/EXCEPT/FINALLY blocks and comprehensions.
+    ##
+    OUTPUT "Processing {finding['title']} ({severity})"
+    TRY:
+        actions = escalation_paths[severity]
+        FOR action IN actions:
+            IF action == "notify":
+                AWAIT notify_async("slack", finding["title"])
+            ELIF action == "escalate":
+                RAISE RuntimeError("Escalation required")
+            ELSE:
+                NOTE "Action executed: {action}"
+    EXCEPT KeyError AS error:
+        NOTE "Unknown severity {severity}: {error}"
+    EXCEPT RuntimeError AS error:
+        NOTE "Escalation triggered: {error}"
+    FINALLY:
+        NOTE "Finished branch for {finding['title']}"
+
+SET findings = [
+    {"title": "Outdated library", "severity": "low"},
+    {"title": "Credential reuse", "severity": "medium"},
+    {"title": "Privilege escalation", "severity": "high"},
+]
+
+FOR finding IN findings:
+    handle_finding(finding["severity"], finding)

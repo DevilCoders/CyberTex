@@ -1,0 +1,30 @@
+"""Demonstrate extended SAPL helpers for conversions, introspection, strings, files, and exceptions."""
+
+SET raw_ports = ["80", "443", "8080"]
+SET normalized_ports = [to_int(port) FOR port IN raw_ports]
+SET metadata = object_describe(normalized_ports)
+SET uppercase_banner = string_upper("sapl helper suite")
+SET trimmed_banner = pipe("  CyberTex :: analytics  ", string_strip, string_title)
+SET highlight = string_join(" | ", [uppercase_banner, trimmed_banner])
+
+SET artifact_path = "helpers-demo.txt"
+file_write_text(artifact_path, string_join("\n", ["ports:"] + [str(value) FOR value IN normalized_ports]))
+SET file_snapshot = file_read_text(artifact_path)
+
+SET CustomFailure = define_exception("CustomFailure")
+
+TRY:
+    RAISE CustomFailure("demo failure")
+EXCEPT CustomFailure AS err:
+    NOTE "Handled: {string_title(str(err))}"
+    SET handled_message = string_title(str(err))
+FINALLY:
+    SET cleanup_complete = True
+
+TASK "Summarise helper usage":
+    "Capture runtime metadata for documentation"
+    NOTE "Ports normalised {normalized_ports}"
+    NOTE "Metadata keys {metadata['attributes']}"
+    NOTE "Banner {highlight}"
+    NOTE "File contents {file_snapshot.split('\n')}"
+    NOTE "Handled message {handled_message}"

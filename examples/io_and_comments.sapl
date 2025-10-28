@@ -1,0 +1,22 @@
+"""Interactive IO tour showcasing INPUT, OUTPUT, and file helpers."""
+
+IMPORT pathlib
+
+TARGET ["https://ops.cybertex.local"]
+SCOPE ["ops.cybertex.local"]
+
+##
+Prompt operators for run metadata and write to disk.
+Demonstrates inline documentation using block comments.
+##
+
+INPUT "Enter analyst name: " AS analyst
+INPUT "Engagement notes: " AS notes
+
+SET report_path = "reports/{analyst}-notes.txt"
+
+TASK "Persist operator notes":
+    "Collect input and persist for later audits"
+    OUTPUT "Saving notes to {report_path}"
+    path_write_text(report_path, f"Analyst: {analyst}\nNotes: {notes}\n")
+    NOTE "Report stored at {pathlib.Path(report_path).resolve()}"

@@ -1,0 +1,28 @@
+"""Class hierarchy illustrating inheritance and polymorphism."""
+
+CLASS Service:
+    """Base class representing a generic service."""
+    DEF __init__(self, name):
+        self.name = name
+        self.tags = set()
+
+    DEF describe(self):
+        RETURN f"Service {self.name}"
+
+    DEF add_tag(self, value):
+        self.tags.add(value)
+
+
+CLASS HTTPService(Service):
+    """HTTP service with bind address configuration."""
+    DEF __init__(self, name, port, *, bind="127.0.0.1"):
+        super().__init__(name)
+        self.port = port
+        self.bind = bind
+        self.add_tag("http")
+
+    DEF describe(self):
+        RETURN f"HTTP {self.name} on {self.bind}:{self.port}"
+
+    DEF to_dict(self):
+        RETURN {"name": self.name, "port": self.port, "bind": self.bind, "tags": list(self.tags)}

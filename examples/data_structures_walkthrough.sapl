@@ -1,0 +1,36 @@
+##
+Data-structure quick tour for analysts
+Demonstrates multi-line comment blocks using double hashes.
+##
+
+"""Illustrates lists, tuples, dictionaries, sets, and comprehensions."""
+
+TARGET ["https://lab.cybertex.local"]
+SCOPE ["lab.cybertex.local"]
+
+SET analysts = ["alex", "sam", "taylor"]
+SET credentials = ("blue", "hunter2")
+SET host_tags = {"lab": "analysis", "prod": "protected"}
+SET signal_ports = {80, 443, 8443}
+
+SET enumerated_hosts = [
+    {"host": host, "tag": host_tags.get("lab", "unknown")}
+    FOR host IN targets
+]
+
+SET analyst_pairs = [(lead, credentials[0]) FOR lead IN analysts]
+SET prioritized_ports = {port FOR port IN signal_ports IF port != 8443}
+SET host_lookup = {entry["host"]: entry FOR entry IN enumerated_hosts}
+
+SET describe = lambda entry: entry["host"] + "::" + entry["tag"]
+SET summaries = [describe(entry) FOR entry IN enumerated_hosts]
+
+username, _ = credentials
+
+TASK "Summarise Collections":
+    "Report data structure usage to operators"
+    OUTPUT "Analysts on duty: {', '.join(analysts)}"
+    OUTPUT "Credentials captured for {username}"
+    OUTPUT "Prioritised ports: {sorted(prioritized_ports)}"
+    NOTE "Host lookup keys {list(host_lookup.keys())}"
+    NOTE "Summaries {summaries}"

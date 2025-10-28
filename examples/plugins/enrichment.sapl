@@ -1,0 +1,20 @@
+"""Demonstrate integrating Python plugins with SAPL."""
+
+IMPORT asyncio
+
+SET ip_addresses = ["10.0.0.1", "10.0.0.2", "198.51.100.42"]
+SET enrich = enrich_ip
+
+TASK "Plugin-backed enrichment pipeline":
+    """Use the plugin-provided helper to annotate IP addresses."""
+    SET enriched = [enrich(address) FOR address IN ip_addresses]
+    FOR record IN enriched:
+        NOTE "{record['ip']} -> ASN {record['asn']} ({record['source']})"
+    FINDING low "Generated {len(enriched)} enrichment records via plugin"
+
+ASYNC DEF demo_async_enrichment(addresses):
+    RETURN [AWAIT asyncio.sleep(0, result=enrich(addr)) FOR addr IN addresses]
+
+TASK "Async enrichment demo":
+    SET enriched_async = AWAIT demo_async_enrichment(ip_addresses)
+    NOTE "Async enrichment completed: {len(enriched_async)} results"

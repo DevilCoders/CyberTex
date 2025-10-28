@@ -1,0 +1,20 @@
+"""Analyse log snippets using the regex helper suite."""
+
+SET log_payload = """
+10.0.0.5 - - [21/Mar/2024:12:01:02 +0000] "GET /login HTTP/1.1" 302 123 "-" "Mozilla/5.0"
+10.0.0.8 - - [21/Mar/2024:12:01:05 +0000] "POST /admin HTTP/1.1" 500 321 "-" "BurpSuite"
+"""
+
+SET status_matches = regex_findall("(?P<ip>\\d+\\.\\d+\\.\\d+\\.\\d+).+\"(?P<verb>GET|POST) (?P<path>[^ ]+)", log_payload)
+SET failure = regex_search("(?P<ip>\\d+\\.\\d+\\.\\d+\\.\\d+).+ 500 ", log_payload)
+
+TASK "Regex-based triage":
+    NOTE "Matched {len(status_matches)} HTTP requests"
+    IF failure:
+        FINDING medium "{failure['groupdict']['ip']} triggered HTTP 500 on {failure['groupdict']['path']}"
+    FOR entry IN status_matches:
+        NOTE "Request: {entry[0]} {entry[1]}"
+
+TASK "Regex replace demo":
+    SET scrubbed = regex_replace("(\d+\.\d+\.\d+\.\d+)", "[REDACTED]", log_payload)
+    NOTE "Scrubbed payload:\n{scrubbed}"
