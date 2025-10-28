@@ -758,6 +758,16 @@ class Interpreter:
             raise RuntimeError(f"Unsupported unary operator {expression.operator}")
         if isinstance(expression, nodes.BinaryExpression):
             left = self._evaluate_expression(expression.left, line)
+            if expression.operator == "AND":
+                if not self._truthy(left):
+                    return False
+                right = self._evaluate_expression(expression.right, line)
+                return self._truthy(right)
+            if expression.operator == "OR":
+                if self._truthy(left):
+                    return True
+                right = self._evaluate_expression(expression.right, line)
+                return self._truthy(right)
             right = self._evaluate_expression(expression.right, line)
             return self._apply_operator(expression.operator, left, right, line)
         if isinstance(expression, nodes.ListExpression):
@@ -925,7 +935,10 @@ class Interpreter:
         if inspect.isawaitable(value):
             try:
                 return asyncio.run(value)
-            except RuntimeError:
+            except RuntimeError as error:
+                message = str(error)
+                if "asyncio.run() cannot be called from a running event loop" not in message:
+                    raise
                 loop = asyncio.new_event_loop()
                 previous: asyncio.AbstractEventLoop | None = None
                 try:
