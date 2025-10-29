@@ -109,6 +109,18 @@ packet.payload = "GET / HTTP/1.1\r\nHost: example.com\r\n\r\n"
 response = send_raw(packet)
 ```
 
+## Full-stack scaffolding and previews
+
+Use `FullStackApp.add_frontend`, `add_backend`, and `add_automation` to attach
+entire dashboards, APIs, and deployment pipelines to a single blueprint. The
+`scaffold_fullstack_app` helper converts that blueprint into `.sapl` scaffolding
+plus an HTML dashboard, while `preview_fullstack_app` spins up an `SAPLServer`
+pointing at the generated assets.
+
+See [Full-Stack Website Workflows](FULLSTACK_WEBSITES.md) for a dedicated
+walkthrough and `examples/fullstack_site_preview.sapl` for a runnable plan that
+builds the bundle and prepares a preview server.
+
 ## Full example
 
 See `examples/security_web_revolution.sapl` for an end-to-end blueprint covering

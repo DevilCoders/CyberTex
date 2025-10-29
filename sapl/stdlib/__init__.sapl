@@ -17,6 +17,7 @@ from typing import Any, Dict, Iterable, List
 
 from ..errors import RuntimeError as SAPLRuntimeError
 from .extended import EXTRA_FUNCTIONS
+from ..fullstack_preview import preview_fullstack_app, scaffold_fullstack_app
 from .security_web import (
     AuthenticationSystem,
     BugBountyPlatform,
@@ -201,6 +202,8 @@ CUSTOM_FUNCTIONS: Dict[str, Any] = {
     "scan": scan,
     "send_raw": send_raw,
     "brute_force": brute_force,
+    "scaffold_fullstack_app": scaffold_fullstack_app,
+    "preview_fullstack_app": preview_fullstack_app,
 }
 
 CUSTOM_FUNCTIONS.update(EXTRA_FUNCTIONS)

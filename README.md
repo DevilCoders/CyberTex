@@ -19,6 +19,7 @@ Special Advanced Programming Language (SAPL) is a research-friendly language for
 - **Plugin ecosystem** – load `.sapl`-suffixed Python plugins via `--plugin` or `--plugin-dir` to register bespoke built-ins before execution, compilation, or testing.
 - **SAPL-native runtime** – the interpreter, CLI, advanced compiler, and stdlib now ship as `.sapl` sources loaded through the built-in importer so your entire toolchain embraces the same extension.
 - **Security web builders** – declaratively assemble static sites, SOC dashboards, APIs, and deployment pipelines with fluent builders that capture security posture alongside application intent.
+- **Full-stack scaffolding** – convert `FullStackApp` blueprints into runnable bundles and preview servers directly from SAPL scripts.
 - **Embedded asset bundling** – register HTML, CSS, Python, PHP, SQL, Go, Java, JavaScript, Perl, Rust, Ruby, R, asm, C, C#, and C++ payloads with `EMBED`, attach metadata, and surface them across the CLI, inspector, and advanced compiler for packaging.
 - **Built-in testing harness** – run `python -m sapl test` to execute SAPL-native test suites alongside Python-based unit tests.
 - **Interactive CLI upgrades** – launch a stateful shell, inspect scripts without execution, and manage the bundled website straight from the CLI.
@@ -92,6 +93,7 @@ python -m sapl run examples/plugins/enrichment.sapl --plugin-dir examples/plugin
 - [Modules & Packages](docs/MODULES_AND_PACKAGES.md)
 - [Embedded Asset Bundling](docs/EMBEDDED_ASSETS.md)
 - [Embedded Language Catalog](docs/EMBED_LANGUAGE_CATALOG.md)
+- [Full-Stack Website Workflows](docs/FULLSTACK_WEBSITES.md)
 - [Security Web Builders](docs/WEB_SECURITY_DEVELOPMENT.md)
 - [Structured Codebase Walkthrough](docs/STRUCTURED_CODEBASE.md)
 - [Regex Helper Overview](docs/REGEX.md)

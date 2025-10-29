@@ -1,0 +1,219 @@
+"""Helpers for materialising and previewing full-stack SAPL web apps."""
+
+from __future__ import annotations
+
+import json
+import tempfile
+import textwrap
+from pathlib import Path
+from typing import Any, Dict, Iterable, List
+
+from .server import SAPLServer
+from .stdlib.security_web import FullStackApp
+
+
+def _ensure_directory(destination: str | Path | None) -> Path:
+    if destination is None:
+        return Path(tempfile.mkdtemp(prefix="sapl_fullstack_"))
+    path = Path(destination).expanduser().resolve()
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def _module_titles(modules: Iterable[Dict[str, Any]]) -> List[str]:
+    titles: List[str] = []
+    for module in modules:
+        name = module.get("name") if isinstance(module, dict) else None
+        if isinstance(name, str) and name:
+            titles.append(name)
+        else:
+            titles.append("module")
+    return titles
+
+
+def _render_frontend_script(metadata: Dict[str, Any]) -> str:
+    modules = metadata.get("frontends", [])
+    notes = [
+        f"    NOTE \"Component {title} configured with security defaults\""
+        for title in _module_titles(modules)
+    ]
+    body = "\n".join(notes) if notes else "    NOTE \"No explicit frontend modules registered\""
+    return textwrap.dedent(
+        f"""
+        # Auto-generated frontend bootstrap derived from FullStackApp configuration
+        TASK "{metadata.get('name', 'fullstack')} frontend blueprint":
+            "Render the recorded components and security posture for preview purposes"
+{body}
+        """
+    ).strip() + "\n"
+
+
+def _render_backend_script(metadata: Dict[str, Any]) -> str:
+    modules = metadata.get("backends", [])
+    notes = [
+        f"    NOTE \"Backend service {title} prepared with recorded middleware\""
+        for title in _module_titles(modules)
+    ]
+    body = "\n".join(notes) if notes else "    NOTE \"No backend services registered\""
+    return textwrap.dedent(
+        f"""
+        # Auto-generated backend orchestration derived from FullStackApp configuration
+        TASK "{metadata.get('name', 'fullstack')} backend blueprint":
+            "Summarise API endpoints and service integrations"
+{body}
+        """
+    ).strip() + "\n"
+
+
+def _render_frontend_page(metadata: Dict[str, Any]) -> str:
+    frontends = metadata.get("frontends", [])
+    backends = metadata.get("backends", [])
+    automations = metadata.get("automations", [])
+
+    def _list_section(title: str, modules: List[Dict[str, Any]]) -> str:
+        if not modules:
+            return f"<p class=\"empty\">No {title.lower()} recorded</p>"
+        items = []
+        for module in modules:
+            name = module.get("name", "module") if isinstance(module, dict) else str(module)
+            config = module.get("configuration", {}) if isinstance(module, dict) else {}
+            config_rows = "".join(
+                f"<li><strong>{key}</strong>: {json.dumps(value)}</li>" for key, value in config.items()
+            )
+            items.append(f"<section><h3>{name}</h3><ul>{config_rows}</ul></section>")
+        return "".join(items)
+
+    return textwrap.dedent(
+        f"""
+        <!doctype html>
+        <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <title>{metadata.get('name', 'FullStack App')} preview</title>
+            <style>
+                body {{ font-family: system-ui, sans-serif; margin: 2rem; background: #0b132b; color: #f5f6fa; }}
+                header {{ margin-bottom: 2rem; }}
+                h1 {{ margin: 0; font-size: 2.5rem; }}
+                section {{ background: #1c2541; padding: 1rem 1.5rem; margin-bottom: 1rem; border-radius: 0.5rem; }}
+                ul {{ margin: 0.5rem 0 0 1.5rem; }}
+                .grid {{ display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); }}
+                .empty {{ font-style: italic; color: #9aa5ce; }}
+            </style>
+        </head>
+        <body>
+            <header>
+                <h1>{metadata.get('name', 'FullStack App')}</h1>
+                <p>{metadata.get('configuration', {}).get('summary', 'Security-first full-stack blueprint')}</p>
+            </header>
+            <main class="grid">
+                <article>
+                    <h2>Frontend modules</h2>
+                    {_list_section('Frontend modules', frontends)}
+                </article>
+                <article>
+                    <h2>Backend services</h2>
+                    {_list_section('Backend services', backends)}
+                </article>
+                <article>
+                    <h2>Automation pipelines</h2>
+                    {_list_section('Automation pipelines', automations)}
+                </article>
+            </main>
+        </body>
+        </html>
+        """
+    ).strip() + "\n"
+
+
+def _render_docs(metadata: Dict[str, Any]) -> str:
+    frontends = metadata.get("frontends", [])
+    backends = metadata.get("backends", [])
+    automations = metadata.get("automations", [])
+    return textwrap.dedent(
+        f"""
+        # {metadata.get('name', 'FullStack App')} Deployment Bundle
+
+        This bundle was generated with `scaffold_fullstack_app` and captures the
+        recorded frontend modules, backend services, and automation pipelines of
+        your SAPL `FullStackApp` blueprint.
+
+        ## Structure
+
+        - `frontend/` – auto-generated `.sapl` scaffolding plus an HTML preview
+          of the configured components ({len(frontends)} entries recorded).
+        - `backend/` – `.sapl` orchestration notes summarising API services and
+          security middleware ({len(backends)} services captured).
+        - `docs/README.md` – this guide with regeneration instructions.
+        - `metadata.json` – machine-readable blueprint summary for CI pipelines.
+
+        Regenerate the bundle by running the original SAPL plan or importing the
+        blueprint inside another script and calling `scaffold_fullstack_app`
+        again. Preview the HTML with `preview_fullstack_app` or by serving the
+        `frontend/` directory through the SAPL website manager.
+        """
+    ).strip() + "\n"
+
+
+def scaffold_fullstack_app(
+    app: FullStackApp,
+    destination: str | Path | None = None,
+    *,
+    include_docs: bool = True,
+) -> Dict[str, Any]:
+    """Materialise *app* into a runnable directory bundle."""
+
+    root = _ensure_directory(destination)
+    frontend_dir = root / "frontend"
+    backend_dir = root / "backend"
+    docs_dir = root / "docs"
+    for path in (frontend_dir, backend_dir, docs_dir):
+        path.mkdir(parents=True, exist_ok=True)
+
+    metadata = app.describe()
+    metadata_path = root / "metadata.json"
+    metadata_path.write_text(json.dumps(metadata, indent=2, sort_keys=True), encoding="utf-8")
+
+    frontend_script = _render_frontend_script(metadata)
+    (frontend_dir / "app.sapl").write_text(frontend_script, encoding="utf-8")
+    index_path = frontend_dir / "index.html"
+    index_path.write_text(_render_frontend_page(metadata), encoding="utf-8")
+
+    backend_script = _render_backend_script(metadata)
+    (backend_dir / "service.sapl").write_text(backend_script, encoding="utf-8")
+
+    if include_docs:
+        (docs_dir / "README.md").write_text(_render_docs(metadata), encoding="utf-8")
+
+    files = sorted(str(path.relative_to(root)) for path in root.rglob("*") if path.is_file())
+
+    return {
+        "root": str(root),
+        "metadata": metadata,
+        "metadata_path": str(metadata_path),
+        "frontend_dir": str(frontend_dir),
+        "backend_dir": str(backend_dir),
+        "docs_dir": str(docs_dir),
+        "index": str(index_path),
+        "files": files,
+    }
+
+
+def preview_fullstack_app(
+    app: FullStackApp,
+    *,
+    destination: str | Path | None = None,
+    bind: str = "127.0.0.1",
+    port: int = 0,
+    include_docs: bool = True,
+    start_preview: bool = False,
+) -> Dict[str, Any]:
+    """Create (and optionally start) a preview server for *app*."""
+
+    bundle = scaffold_fullstack_app(app, destination, include_docs=include_docs)
+    server = SAPLServer(bind=bind, port=port, directory=bundle["frontend_dir"])
+    if start_preview:
+        server.start()
+    return {"bundle": bundle, "server": server}
+
+
+__all__ = ["preview_fullstack_app", "scaffold_fullstack_app"]

@@ -6,6 +6,18 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, Iterable, Iterator, List, Optional, Sequence
 
 
+def _describe_builder(builder: Any) -> Any:
+    """Return a serialisable representation of *builder*."""
+
+    if hasattr(builder, "describe"):
+        return builder.describe()
+    if isinstance(builder, dict):
+        return dict(builder)
+    if isinstance(builder, (list, tuple, set)):
+        return list(builder)
+    return builder
+
+
 def _normalise_call(args: Sequence[Any], kwargs: Dict[str, Any]) -> Any:
     """Normalise positional and keyword arguments for storage."""
 
@@ -253,6 +265,34 @@ class RealTimeDashboard(SecurityBuilder):
 class FullStackApp(SecurityBuilder):
     def __init__(self, name: str) -> None:
         super().__init__(name, "full_stack_app")
+        object.__setattr__(self, "frontends", [])
+        object.__setattr__(self, "backends", [])
+        object.__setattr__(self, "automations", [])
+
+    def add_frontend(self, module: Any) -> "FullStackApp":
+        self.frontends.append(module)
+        self.history.append(("frontend", _describe_builder(module)))
+        return self
+
+    def add_backend(self, module: Any) -> "FullStackApp":
+        self.backends.append(module)
+        self.history.append(("backend", _describe_builder(module)))
+        return self
+
+    def add_automation(self, module: Any) -> "FullStackApp":
+        self.automations.append(module)
+        self.history.append(("automation", _describe_builder(module)))
+        return self
+
+    def describe(self) -> Dict[str, Any]:
+        summary = super().describe()
+        if getattr(self, "frontends", None):
+            summary["frontends"] = [_describe_builder(module) for module in self.frontends]
+        if getattr(self, "backends", None):
+            summary["backends"] = [_describe_builder(module) for module in self.backends]
+        if getattr(self, "automations", None):
+            summary["automations"] = [_describe_builder(module) for module in self.automations]
+        return summary
 
 
 class BugBountyPlatform(SecurityBuilder):

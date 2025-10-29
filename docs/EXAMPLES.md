@@ -119,4 +119,10 @@ dashboards, threat intelligence ingestion, penetration testing platforms,
 secure deployment pipelines, and low-level network primitives inside a single
 plan.
 
+## fullstack_site_preview.sapl
+
+Extends the security web builders with the new full-stack scaffolding helpers.
+Generates `.sapl` frontend/back-end bundles, writes an HTML dashboard, and
+prepares an HTTP preview server ready for local inspection.
+
 Use these scripts as templates when building your own SAPL projects.

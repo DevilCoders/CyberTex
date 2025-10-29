@@ -1,0 +1,95 @@
+# FULLSTACK SECURITY WEBSITE BLUEPRINT
+
+NOTE "Scaffold a fullstack security portal and prepare a preview server"
+
+SET portal = (
+    FullStackApp("cyber-operations-portal")
+    .summary("Security-first frontends, APIs, and automation pipelines")
+    .frontend("reactive-threat-board")
+    .backend("real-time-api")
+    .database("postgresql-encrypted")
+    .authentication("fido2-mfa")
+    .deployment("zero-trust-edge")
+)
+
+SET login_form = (
+    Component("OpsLoginForm")
+    .state(username="", password="", token="")
+    .security(
+        rate_limiting="5 attempts per minute",
+        csrf_protection=True,
+        input_sanitization="strict",
+    )
+    .method("authenticate", "Call operations-api and register zero-trust session")
+    .render(
+        """
+        <form class="ops-login" security="encrypted">
+            <input name="username" type="text" validator="email" />
+            <input name="password" type="password" validator="strong_password" />
+            <input name="token" type="text" validator="mfa_format" />
+        </form>
+        """
+    )
+)
+
+SET incident_feed = ThreatFeedComponent(auto_refresh=True, source="siem-stream")
+SET incident_timeline = IncidentTimelineComponent()
+
+SET operations_dashboard = (
+    WebApp("operations-hub")
+    .frontend("react-like-components")
+    .backend("async-api-gateway")
+    .authentication("mfa-required")
+    .database("encrypted-at-rest")
+)
+operations_dashboard.register_component(login_form)
+operations_dashboard.register_component(incident_feed)
+operations_dashboard.register_component(incident_timeline)
+
+portal.add_frontend(operations_dashboard)
+portal.add_frontend(login_form)
+
+SET operations_api = (
+    WebAPI("operations-api")
+    .middleware([rate_limiting, authentication, logging])
+    .database("postgresql-encrypted")
+    .cache("redis-secure")
+)
+
+SET scan_endpoint = operations_api.endpoint(
+    "/api/v1/scans",
+    method="POST",
+    authentication="bearer-token",
+    rate_limit="10 requests per minute",
+)
+scan_endpoint.handler("Validate scan payload, enqueue job, and return status reference")
+
+SET health_endpoint = operations_api.endpoint(
+    "/api/v1/health",
+    method="GET",
+    authentication="bearer-token",
+)
+health_endpoint.handler("Return system heartbeat for monitoring dashboards")
+
+portal.add_backend(operations_api)
+
+SET deployment_pipeline = (
+    SecureDeployment("operations-pipeline")
+    .source_control("git-encrypted")
+    .build_process("sast-and-container-scan")
+    .testing("automated-pentest")
+    .deployment("zero-downtime")
+)
+deployment_pipeline.add_gate("dependency-audit")
+deployment_pipeline.add_gate("infrastructure-policy-check")
+
+portal.add_automation(deployment_pipeline)
+
+SET bundle = scaffold_fullstack_app(portal, "build/cyber_portal")
+NOTE "Fullstack bundle generated at {bundle['root']} with {len(bundle['files'])} files"
+
+SET preview = preview_fullstack_app(portal, destination="build/cyber_portal_preview", port=0)
+NOTE "Preview server prepared at {preview['server'].server_address}"
+
+SET metadata_blob = json_pretty(bundle["metadata"])
+OUTPUT metadata_blob

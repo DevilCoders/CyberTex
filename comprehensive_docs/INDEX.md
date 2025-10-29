@@ -11,5 +11,6 @@ The comprehensive documentation suite aggregates deep-dive guidance for advanced
 - [Website Overview](WEBSITE_OVERVIEW.md): Documentation for the bundled advanced website, its structure, and deployment recommendations.
 - [Embedded Assets](../docs/EMBEDDED_ASSETS.md): Field manual for the `EMBED` statement, metadata conventions, and packaging workflows.
 - [Embedded Language Catalog](../docs/EMBED_LANGUAGE_CATALOG.md): Canonical list of supported languages and extension guidance.
+- [Full-Stack Website Workflows](../docs/FULLSTACK_WEBSITES.md): Blueprint-to-preview guidance for running security-focused web apps end-to-end.
 
 All documents are designed to be read together, with cross-references that explain how concepts connect across the toolchain.
