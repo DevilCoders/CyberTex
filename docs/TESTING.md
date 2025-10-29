@@ -19,13 +19,13 @@ DEF test_enrichment_pipeline():
 ## Running Tests
 
 ```bash
-python -m sapl test tests/
+sapl-test tests/
 ```
 
 Use `--json` to emit machine-readable output:
 
 ```bash
-python -m sapl test tests/ --json > reports/test-results.json
+sapl-test tests/ --format json > reports/test-results.json
 ```
 
 ## Plugins and Fixtures
@@ -33,7 +33,7 @@ python -m sapl test tests/ --json > reports/test-results.json
 Pass plugins to the test runner when suites depend on plugin-provided built-ins:
 
 ```bash
-python -m sapl test tests/ --plugin plugins.ip_enrich
+sapl-test tests/ --plugin plugins.ip_enrich
 ```
 
 Plugins are invoked for each interpreter instance, ensuring isolation between test files.
@@ -44,6 +44,6 @@ If a test file defines no `test_` functions, the runner records a skipped outcom
 
 ## Integrating With CI
 
-* Add `python -m sapl test tests/` to your CI pipeline before compilation or deployment steps.
+* Add `sapl-test tests/` to your CI pipeline before compilation or deployment steps.
 * Treat a non-zero exit code as a failure; the command exits with status `1` when any test fails or when no files are discovered.
 * Archive JSON output to integrate with dashboards or coverage tooling.

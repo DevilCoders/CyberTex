@@ -6,7 +6,7 @@ Large SAPL projects benefit from consistent structure and tooling. This guide co
 
 ```
 project/
-├── sapl-required.yaml
+├── required.yaml
 ├── packages/
 │   └── your_package/
 │       ├── __init__.sapl
@@ -26,10 +26,10 @@ project/
 
 ## Linting and Testing
 
-* Run `python -m sapl lint scripts/main.sapl` before executing or compiling to catch warnings early.
+* Run `sapl lint scripts/main.sapl` before executing or compiling to catch warnings early.
 * Use the new `sapl-test` runner to validate behavioural contracts:
   ```bash
-  python -m sapl test tests/
+  sapl-test tests/
   ```
 * Integrate linting and tests into CI workflows to prevent regressions.
 
@@ -47,9 +47,10 @@ project/
 
 ## Dependency Hygiene
 
-* Keep `sapl-required.yaml` lean and review transitive dependencies periodically.
+* Keep `required.yaml` lean and review transitive dependencies periodically.
 * Pin critical versions to avoid unexpected runtime changes.
-* Provide installation scripts (`setup.ps1`, `setup.sh`) that wrap the instructions from `docs/INSTALLATION.md`.
+* Provide installation scripts (`setup.ps1`, `setup.sh`) that wrap the instructions from `docs/INSTALLATION.md` and
+  [SAPL_ENVIRONMENTS.md](SAPL_ENVIRONMENTS.md).
 
 ## Code Review Checklist
 

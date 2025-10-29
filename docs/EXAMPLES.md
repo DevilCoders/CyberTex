@@ -14,6 +14,21 @@ Documents platform-aware deployment steps, emitting notes and tasks tailored for
 
 Shows how to plan GUI and CLI distribution pipelines, including compilation targets and packaging actions.
 
+## advanced_compiler_pipeline.sapl
+
+Runs the incremental compiler with optimisation profiles, publishes artifacts to
+the SAPL server, and records diagnostics for later review.
+
+## sapl_server_bootstrap.sapl
+
+Configures TLS certificates, authenticated users, and hot-reload directories for
+the built-in server before seeding the website bundle.
+
+## cli_automation_suite.sapl
+
+Automates `sapl fmt`, `sapl env sync`, `sapl-test`, and `sapl compile` to show
+how the CLI streamlines day-to-day development.
+
 ## plugins/enrichment.sapl
 
 Works with the Python plugin located in `examples/plugins/ip_enricher.py`, illustrating how plugin-provided built-ins enrich engagement data.
@@ -42,6 +57,11 @@ Tours list, tuple, dictionary, set, and comprehension features while
 demonstrating the new multi-line `##` comment blocks and readability-focused
 helpers.
 
+## virtual_environment_management.sapl
+
+Guides operators through creating, activating, and syncing virtual environments
+across Linux, macOS, and Windows hosts.
+
 ## control_flow_showcase.sapl
 
 Illustrates branching, loops, exception handling, async `AWAIT`, and the
@@ -56,6 +76,16 @@ async status gathering scenario.
 
 Demonstrates `INPUT`, `OUTPUT`, filesystem helpers, and block comments for
 operator guidance.
+
+## website_publishing_flow.sapl
+
+Generates documentation, integrates sapl-test reports, and deploys to the SAPL
+website preview server for stakeholder review.
+
+## plugin_ci_pipeline.sapl
+
+Runs plugin-specific tests, collects coverage, and publishes the package to an
+internal index, illustrating maintainable extension workflows.
 
 ## object_modeling.sapl
 

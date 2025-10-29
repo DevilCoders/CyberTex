@@ -37,10 +37,13 @@ SET profiles = ops.load()
 
 ## Distributing Packages
 
-1. Commit the package under version control alongside `sapl-required.yaml`.
+1. Commit the package under version control alongside `required.yaml`.
 2. Document usage in `docs/PACKAGING.md` or your project README.
 3. Optionally provide a `setup.py` or `pyproject.toml` if shipping mixed Python/SAPL projects.
 4. Use tags/releases to distribute stable versions for internal consumers.
+5. Publish to internal artifact repositories via `sapl package publish --index
+   https://sapl.example.local`. Consumers can then list available versions with
+   `sapl package search`.
 
 ## Local Module Loading
 
@@ -52,16 +55,18 @@ project/
 │   └── cyber_ops/
 ├── scripts/
 │   └── engagement.sapl
-└── sapl-required.yaml
+└── required.yaml
 ```
 
 Then execute scripts with:
 
 ```bash
-python -m sapl run scripts/engagement.sapl
+sapl run scripts/engagement.sapl
 ```
 
-The interpreter automatically adds the script directory to the search path, allowing `IMPORT cyber_ops` to succeed.
+The interpreter automatically adds the script directory to the search path, allowing `IMPORT cyber_ops` to succeed. Add extra
+directories via the `paths` entry in `required.yaml` to share local libraries
+without modifying `PYTHONPATH`.
 
 ## Publishing Libraries
 
@@ -70,5 +75,9 @@ For wider distribution:
 * Bundle SAPL packages into a Python wheel alongside helper Python modules.
 * Provide entry points that call `sapl.cli.main` with preconfigured arguments.
 * Ship documentation covering installation, testing, and plugin usage.
+* Generate SBOMs (`sapl package sbom`) to satisfy compliance teams.
+* Include GUI and CLI compilation guides (see
+  [GUI_AND_CLI_COMPILATION.md](GUI_AND_CLI_COMPILATION.md)) so consumers know how
+  to emit launchers for their platforms.
 
 With these practices, teams can develop rich SAPL libraries that mirror traditional software engineering workflows.

@@ -9,6 +9,10 @@ filesystem assets required for assessments.
   validators can be attached via plugins.
 * `OUTPUT` sends formatted strings to the runtime console. Use Python-style
   braces for interpolation and `NOTE` to record findings inside reports.
+* `PROMPT` integrates with the website UI to capture structured feedback from
+  remote operators, with automatic validation hooks.
+* `LOG.debug/info/warn/error` writes to structured logs consumed by the SAPL
+  server and website dashboards.
 
 ## Structured Reporting
 
@@ -24,6 +28,17 @@ filesystem assets required for assessments.
 * Use `path_glob`, `path_iterdir`, and `path_exists` to enumerate artefacts.
 * The extended standard library exposes `open_file`, `read_json`, and
   `write_json` helpers for structured data pipelines.
+* Binary workflows rely on `read_bytes`, `write_bytes`, and memory-mapped IO for
+  performance-sensitive implants.
+* Stream large files with `with open_file(path) AS handle:` blocks to ensure
+  handles close correctly even if exceptions occur.
+
+## Remote Resources
+
+* `HTTP.GET`, `HTTP.POST`, and `SFTP` helpers offer cross-platform network
+  interactions that respect proxy settings declared in `required.yaml`.
+* Use `sapl.io.TempDir()` to stage artefacts during compilation or testing while
+  keeping the filesystem tidy.
 
 ## Comments for Operators
 
