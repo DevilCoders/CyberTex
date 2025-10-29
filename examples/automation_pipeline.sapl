@@ -1,0 +1,43 @@
+NOTE "Cross-platform automation pipeline"
+TARGET ["https://orchestration.internal"]
+SET pipelines = {
+    "compile": ["linux", "macos", "windows"],
+    "deploy": ["staging", "production"],
+}
+SET build_matrix = [(stage, platform) FOR stage IN pipelines["deploy"] FOR platform IN pipelines["compile"]]
+
+EMBED rust agent = """
+use reqwest::blocking::Client;
+
+pub fn run(target: &str) -> Result<u16, reqwest::Error> {
+    let client = Client::new();
+    let response = client.get(target).send()?;
+    Ok(response.status().as_u16())
+}
+""" USING {"path": "agents/agent.rs", "tags": ["automation", "rust"]}
+
+EMBED perl orchestrator = """
+use strict;
+use warnings;
+sub run_pipeline {
+    my ($pipeline, @targets) = @_;
+    foreach my $target (@targets) {
+        print "Running $pipeline on $target\n";
+    }
+}
+""" USING {"path": "scripts/orchestrator.pl", "tags": ["automation", "perl"]}
+
+EMBED r analytics = """
+library(jsonlite)
+results <- data.frame(stage=c("staging", "production"), success=c(TRUE, FALSE))
+write_json(results, "analytics.json")
+""" USING {"path": "analytics/pipeline.R", "tags": ["analytics", "r"]}
+
+TASK "Build matrix":
+    FOR stage, platform IN build_matrix:
+        RUN f"sapl-cli build --stage {stage} --platform {platform}"
+
+REPORT "Pipeline overview" USING {
+    "pipelines": pipelines,
+    "build_matrix": build_matrix,
+}

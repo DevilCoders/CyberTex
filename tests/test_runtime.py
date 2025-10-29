@@ -3,6 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 import sys
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -11,6 +13,7 @@ from sapl.cli import run_file
 from sapl.lexer import lex
 from sapl.parser import parse
 from sapl.runtime import Interpreter
+from sapl.errors import RuntimeError as SAPLRuntimeError
 
 
 def evaluate(source: str):
@@ -196,6 +199,26 @@ def test_comprehension_lambda_and_async_behaviour():
     assert result.variables["parity"] == "odd"
     assert result.variables["scaled"] == [0, 2, 4]
     assert result.variables["fetched"] == 6
+
+
+def test_embed_language_aliases():
+    source = "\n".join(
+        [
+            'EMBED js tracker = "console.log(42)"',
+        ]
+    )
+    result = evaluate(source)
+    assert result.embedded_assets['tracker']['language'] == 'javascript'
+
+
+def test_embed_rejects_unknown_language():
+    source = "\n".join(
+        [
+            'EMBED brainfuck sample = "+-"',
+        ]
+    )
+    with pytest.raises(SAPLRuntimeError):
+        evaluate(source)
 
 
 def test_embed_statement_registers_assets():

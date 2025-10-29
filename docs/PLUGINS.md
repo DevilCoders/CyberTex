@@ -1,11 +1,11 @@
 # Plugin Development
 
-SAPL plugins let you extend the interpreter with custom built-ins, analytics, or tooling integrations. Plugins are regular Python modules that expose a `register(interpreter)` function.
+SAPL plugins let you extend the interpreter with custom built-ins, analytics, or tooling integrations. Plugins are regular Python modules stored with the `.sapl` suffix and expose a `register(interpreter)` function.
 
 ## Creating a Plugin
 
 ```python
-# plugins/ip_enrich.py
+# plugins/ip_enrich.sapl
 
 def register(interpreter):
     def enrich(ip):
@@ -32,7 +32,7 @@ Place plugins inside a directory and use `--plugin-dir` or `sapl.plugins.load_pl
 sapl run scripts/enrichment.sapl --plugin-dir plugins/
 ```
 
-The loader scans `*.py` files and invokes their `register` function.
+The loader scans `*.sapl` files first (falling back to legacy `*.py` modules) and invokes their `register` function.
 
 Declare optional `setup(interpreter)` and `teardown(interpreter)` hooks to
 prepare resources or release them after execution. The CLI automatically calls
@@ -51,7 +51,7 @@ these when plugins opt-in via attributes on the module.
 ## Testing Plugins
 
 * Write SAPL tests that exercise plugin-provided built-ins and run them with `sapl-test --plugin your.plugin tests/`.
-* Use Python unit tests to verify the plugin registration logic.
+* Use Python unit tests to verify the plugin registration logic—the `.sapl` suffix is handled automatically by the import hook.
 * Validate interoperability with the SAPL server and website by running the
   integration tests defined in `tests/plugins/`.
 

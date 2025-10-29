@@ -12,7 +12,7 @@ SAPL plugins are Python callables that receive an `Interpreter` instance. This d
 ## Recommended Structure
 
 ```python
-# plugins/reporting.py
+# plugins/reporting.sapl
 def register(interpreter):
     interpreter.register_builtin("notify", lambda message: print(f"[notify] {message}"))
     register.__sapl_plugin_name__ = "reporting"
@@ -40,4 +40,4 @@ The new `sapl shell` command can also bootstrap plugins non-interactively:
 sapl shell --plugin company.plugins:register --execute "NOTE \"Plugin ready\""
 ```
 
-For an end-to-end example, see `examples/plugins/enrichment.sapl` and `examples/plugins/ip_enricher.py`.
+For an end-to-end example, see `examples/plugins/enrichment.sapl` and `examples/plugins/ip_enricher.sapl`.

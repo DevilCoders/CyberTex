@@ -1,5 +1,9 @@
 """SAPL (Special Advanced Programming Language) package."""
 
+from .import_hooks import install_sapl_importer
+
+install_sapl_importer()
+
 from .advanced_compiler import AdvancedCompiler
 from .cli import highlight_file, lint_file, run_file
 from .environment import create_virtual_environment, load_required_config
@@ -34,6 +38,7 @@ __all__ = [
     "run_file",
     "SAPLServer",
     "STANDARD_LIBRARY_CATALOG",
+    "install_sapl_importer",
     "run_tests",
     "summarise_outcomes",
 ]

@@ -22,7 +22,7 @@ project/
 │   ├── detection.sapl
 │   └── response.sapl
 ├── plugins/
-│   └── enrichment.py
+│   └── enrichment.sapl
 ├── required.yaml
 └── website/
     └── ...

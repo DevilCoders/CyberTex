@@ -16,8 +16,8 @@ Special Advanced Programming Language (SAPL) is a research-friendly language for
 - **Polyglot emitters** – translate SAPL playbooks into pseudo assembly, C, C++, C#, PHP, SQL, Go, Java, JavaScript, Perl, Rust, Ruby, or R listings for collaborative reviews with systems programmers.
 - **Regex and analytics helpers** – dedicated `regex_*` built-ins wrap Python’s `re` module and return structured results for log parsing or payload analysis.
 - **Purple-team aware helpers** – structured blue- and red-team primitives model readiness metrics, response playbooks, and offensive campaigns side by side.
-- **Plugin ecosystem** – load Python plugins via `--plugin` or `--plugin-dir` to register bespoke built-ins before execution, compilation, or testing.
-- **Embedded asset bundling** – register multi-language payloads with `EMBED`, attach metadata, and surface them across the CLI, inspector, and advanced compiler for packaging.
+- **Plugin ecosystem** – load `.sapl`-suffixed Python plugins via `--plugin` or `--plugin-dir` to register bespoke built-ins before execution, compilation, or testing.
+- **Embedded asset bundling** – register HTML, CSS, Python, PHP, SQL, Go, Java, JavaScript, Perl, Rust, Ruby, R, asm, C, C#, and C++ payloads with `EMBED`, attach metadata, and surface them across the CLI, inspector, and advanced compiler for packaging.
 - **Built-in testing harness** – run `python -m sapl test` to execute SAPL-native test suites alongside Python-based unit tests.
 - **Interactive CLI upgrades** – launch a stateful shell, inspect scripts without execution, and manage the bundled website straight from the CLI.
 
@@ -89,6 +89,7 @@ python -m sapl run examples/plugins/enrichment.sapl --plugin-dir examples/plugin
 - [Creating Packages & Libraries](docs/PACKAGING.md)
 - [Modules & Packages](docs/MODULES_AND_PACKAGES.md)
 - [Embedded Asset Bundling](docs/EMBEDDED_ASSETS.md)
+- [Embedded Language Catalog](docs/EMBED_LANGUAGE_CATALOG.md)
 - [Structured Codebase Walkthrough](docs/STRUCTURED_CODEBASE.md)
 - [Regex Helper Overview](docs/REGEX.md)
 - [Polyglot Compilation Targets](docs/LANGUAGE_TARGETS.md)

@@ -24,8 +24,7 @@ teams can transition with minimal friction.
 * `SET` introduces or reassigns variables. Multiple assignment is available via
   tuple unpacking, and destructuring works across lists, tuples, dictionaries,
   and sets.
-* `EMBED` registers HTML, CSS, SQL, script fragments, or compiled payloads with
-  optional metadata for packaging, website exports, and CLI previews.
+* `EMBED` registers HTML, CSS, Python, PHP, SQL, Go, Java, JavaScript, Perl, Rust, Ruby, R, asm, C, C#, and C++ snippets with optional metadata for packaging, website exports, and CLI previews.
 * Primitive variables include integers, floats, booleans, and strings. Literals
   follow Python syntax (`TRUE`, `FALSE`, quoted strings, numeric underscores).
 * Collection literals span lists (`[1, 2, 3]`), tuples (`(1, 2)`), dictionaries

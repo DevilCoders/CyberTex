@@ -49,3 +49,5 @@ OUTPUT matrix
 Because the helpers sit inside the standard library catalogue they can be
 combined with blue-team playbooks in a single script, making SAPL a natural
 platform for purple-team exercises and capability benchmarking.
+
+Reference `examples/redteam_operation.sapl` for an automation-ready playbook that pairs HTML, Python, and C++ embeds with campaign orchestration.

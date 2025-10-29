@@ -14,7 +14,7 @@ project/
 ├── scripts/
 │   └── main.sapl
 ├── plugins/
-│   └── enrich.py
+│   └── enrich.sapl
 └── tests/
     └── test_workflows.sapl
 ```

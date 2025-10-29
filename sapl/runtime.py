@@ -14,6 +14,7 @@ from types import ModuleType
 
 from . import nodes
 from .errors import RuntimeError
+from .language_registry import normalise_embed_language
 from . import stdlib
 from .lexer import lex
 from .module_loader import ModuleLoader, ModuleSpec
@@ -338,7 +339,10 @@ class Interpreter:
             self.context.payloads[statement.name] = payload_values
             return
         if isinstance(statement, nodes.EmbedStatement):
-            language = str(statement.language).lower()
+            try:
+                language = normalise_embed_language(str(statement.language))
+            except ValueError as exc:
+                raise RuntimeError(str(exc))
             content_value = self._evaluate_expression(statement.content, statement.line)
             metadata_value: Dict[str, Any] = {}
             if statement.metadata is not None:

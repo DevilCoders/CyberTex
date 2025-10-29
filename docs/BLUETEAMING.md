@@ -55,3 +55,5 @@ NOTE "Current defensive readiness: {readiness['score']}"
 These helpers are available across interpreters, compilers, the linter, and the
 `sapl-test` harness. Defensive teams can therefore record detections,
 link them to runbooks, and export reports without leaving the SAPL ecosystem.
+
+See `examples/blueteam_response.sapl` for an automation-heavy containment workflow that embeds SQL, Python, and reporting assets alongside SOC actions.

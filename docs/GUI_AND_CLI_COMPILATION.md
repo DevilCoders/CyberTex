@@ -7,7 +7,7 @@ SAPL targets cybersecurity automation, but compiled outputs can feed GUI or CLI 
 1. Author your SAPL workflow under `scripts/`.
 2. Transpile to Python:
    ```bash
-   sapl compile scripts/scan.sapl --target python > build/scan.py
+   sapl compile scripts/scan.sapl --target python > build/scan_transpiled.sapl
    ```
 3. Wrap the generated Python inside a thin CLI harness using `argparse` or reuse
    `sapl.cli` utilities documented in [SAPL_CLI.md](SAPL_CLI.md).

@@ -45,4 +45,4 @@ scorecard = helpers.purpleteam_scorecard(
 
 The purple-team helpers integrate seamlessly with the documentation and
 reporting pipelines introduced earlier, making it simple to expand existing
-playbooks into collaborative purple exercises.
+playbooks into collaborative purple exercises. Review `examples/purpleteam_sync.sapl` for a telemetry-aware scenario that mixes JavaScript dashboards and Go probes with alignment scorecards.

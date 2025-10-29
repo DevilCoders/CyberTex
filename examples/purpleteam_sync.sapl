@@ -1,0 +1,40 @@
+NOTE "Purple team continuous improvement workflow"
+TARGET ["https://app.internal", "https://api.internal"]
+SET controls = ["mfa", "siem", "edr"]
+SET scenarios = [
+    {"id": "PURPLE-1", "control": "mfa", "technique": "phishing"},
+    {"id": "PURPLE-2", "control": "siem", "technique": "lateral-movement"},
+]
+SET completed = []
+
+EMBED javascript telemetry_dashboard = """
+export function renderChart(data) {
+  const series = data.map((entry) => entry.impact);
+  return { labels: data.map((entry) => entry.id), series };
+}
+""" USING {"path": "telemetry/dashboard.js", "tags": ["purpleteam", "visualisation"]}
+
+EMBED go detection_probe = """
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    controls := []string{"mfa", "siem", "edr"}
+    fmt.Printf("Controls: %v\n", controls)
+}
+""" USING {"path": "probes/detection.go", "tags": ["automation", "go"]}
+
+TASK "Execute purple scenarios":
+    FOR scenario IN scenarios:
+        NOTE f"Exercising technique {scenario['technique']}"
+        RUN f"sapl-cli exec scenarios/{scenario['id']}"
+        completed.append(scenario["id"])
+
+REPORT "Purple program scorecard" USING {
+    "controls": controls,
+    "scenarios": scenarios,
+    "completed": completed,
+}

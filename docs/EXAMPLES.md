@@ -35,19 +35,31 @@ how the CLI streamlines day-to-day development.
 
 ## plugins/enrichment.sapl
 
-Works with the Python plugin located in `examples/plugins/ip_enricher.py`, illustrating how plugin-provided built-ins enrich engagement data.
+Works with the Python plugin located in `examples/plugins/ip_enricher.sapl`, illustrating how plugin-provided built-ins enrich engagement data.
 
 ## blueteam_operations.sapl
 
 Demonstrates the blue-team helper suite by logging detections, building readiness snapshots, and exporting SOC runbooks from one plan.
 
+## blueteam_response.sapl
+
+Automates high-severity containment workflows by embedding SQL reports, Python ticket synchronization, and looping over SOC incidents.
+
 ## redteam_operations.sapl
 
 Pairs with the blue-team script to stage objectives, campaigns, and emulation matrices that feed into purple-team exercises.
 
+## redteam_operation.sapl
+
+Delivers an end-to-end red-team automation plan complete with embedded HTML lures, Python beacons, and C++ launchers ready for packaging.
+
 ## purpleteam_alignment.sapl
 
 Demonstrates how the purple-team helpers can align campaigns, readiness, exercise plans, and scorecards into a single workflow.
+
+## purpleteam_sync.sapl
+
+Coordinates purple-team scenario execution, JavaScript telemetry exports, and Go-based detection probes to keep improvements on schedule.
 
 ## language_targets.sapl
 
@@ -90,6 +102,10 @@ website preview server for stakeholder review.
 
 Runs plugin-specific tests, collects coverage, and publishes the package to an
 internal index, illustrating maintainable extension workflows.
+
+## automation_pipeline.sapl
+
+Builds a cross-platform pipeline with embedded Rust agents, Perl orchestrators, and R analytics artifacts for end-to-end automation.
 
 ## object_modeling.sapl
 

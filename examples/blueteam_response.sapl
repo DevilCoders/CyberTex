@@ -1,0 +1,37 @@
+NOTE "Blue team automated containment workflow"
+TARGET ["siem.local", "edr.core"]
+SET incidents = [
+    {"id": "INC-1024", "severity": "high", "host": "db01"},
+    {"id": "INC-1025", "severity": "medium", "host": "app12"},
+]
+SET high_priority = [item FOR item IN incidents IF item["severity"] == "high"]
+SET notification_channels = {"slack": "#soc-ops", "email": "soc@internal"}
+
+EMBED sql response_query = """
+SELECT host, severity, evidence
+FROM incidents
+WHERE severity = 'high'
+""" USING {"path": "queries/high_priority.sql", "tags": ["blueteam", "reporting"]}
+
+EMBED python ticket_sync = """
+import httpx
+
+def run(ticket_id, host):
+    payload = {"ticket": ticket_id, "host": host, "status": "contained"}
+    response = httpx.post("https://tickets.internal/api/update", json=payload, timeout=10)
+    response.raise_for_status()
+    return response.json()
+""" USING {"path": "automation/ticket_sync.py", "tags": ["automation", "containment"]}
+
+TASK "Contain high severity incidents":
+    FOR incident IN high_priority:
+        NOTE f"Isolating {incident['host']}"
+        RUN f"edrctl isolate --host {incident['host']}"
+        SET status = ticket_sync(incident["id"], incident["host"])
+        FINDING "Host contained" SEVERITY "medium" USING {"host": incident["host"], "status": status}
+
+REPORT "Daily containment summary" USING {
+    "total_incidents": len(incidents),
+    "isolated": [item["host"] for item in high_priority],
+    "notifications": notification_channels,
+}

@@ -13,7 +13,7 @@ Understanding the SAPL runtime is crucial for building reliable automation. This
 - **Global Frame**: `context.variables` stores module-level bindings. Destructuring assignments and augmented assignments operate here unless inside a function or class body.
 - **Frame Stack**: `context.frames` models lexical scoping. New frames are pushed for function calls, context managers, and loop scopes.
 - **Task Stack**: `context._task_stack` tracks nested `TASK` execution, ensuring actions are attributed to the correct task when recorded.
-- **Embedded Asset Registry**: `context.embedded_assets` stores `EMBED` statements with language labels, metadata, and content. Each entry is mirrored in `ExecutionResult.embedded_assets` and surfaced to the shell/CLI for packaging.
+- **Embedded Asset Registry**: `context.embedded_assets` stores `EMBED` statements with normalised language labels, metadata, and content. Each entry is mirrored in `ExecutionResult.embedded_assets` and surfaced to the shell/CLI for packaging. Unsupported language identifiers raise a runtime error before execution proceeds.
 
 Mutable objects (lists, dictionaries, sets) are stored by reference, mirroring Python semantics. The shell and inspector render them using JSON-friendly projections to avoid exposing unserialisable callables.
 

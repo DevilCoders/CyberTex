@@ -41,7 +41,7 @@ iteration.
 ## Extensibility Hooks
 
 - **Custom routes:** Implement `ServerExtension` classes in
-  `plugins/server/*.py` to add API endpoints or web sockets.
+  `plugins/server/*.sapl` to add API endpoints or web sockets.
 - **Request filtering:** Attach middleware to inspect headers and enforce
   network segmentation policies.
 - **Event streaming:** Expose `--event-bus` to forward access logs to SIEM

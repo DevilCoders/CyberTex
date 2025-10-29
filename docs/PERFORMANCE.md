@@ -22,7 +22,7 @@ SAPL balances expressiveness with runtime performance. This guide outlines strat
 * For direct SAPL execution, wrap heavy sections in timing helpers registered by plugins:
 
 ```python
-# plugins/profile.py
+# plugins/profile.sapl
 import time
 
 def register(interpreter):
