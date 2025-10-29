@@ -37,12 +37,9 @@ def _wrap_plugin(hook: Callable[["Interpreter"], None], source: str) -> PluginHo
 
 
 def _candidate_plugin_files(directory: Path) -> Iterable[Path]:
-    """Yield plugin files from *directory* preferring ``.sapl`` suffixes."""
+    """Yield plugin files from *directory* limited to ``.sapl`` suffixes."""
 
-    sapl_files = sorted(directory.glob("*.sapl"))
-    if sapl_files:
-        return sapl_files
-    return sorted(directory.glob("*.py"))
+    return sorted(directory.glob("*.sapl"))
 
 
 def _load_module_from_path(file_path: Path, module_name: str):

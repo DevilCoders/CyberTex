@@ -1,0 +1,432 @@
+"""Composable builders for security-focused web development scenarios."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from typing import Any, Dict, Iterable, Iterator, List, Optional, Sequence
+
+
+def _normalise_call(args: Sequence[Any], kwargs: Dict[str, Any]) -> Any:
+    """Normalise positional and keyword arguments for storage."""
+
+    if args and kwargs:
+        return {"args": list(args), "kwargs": dict(kwargs)}
+    if kwargs:
+        return dict(kwargs)
+    if not args:
+        return None
+    if len(args) == 1:
+        return args[0]
+    return list(args)
+
+
+class SecurityBuilder:
+    """Base class for fluent configuration builders."""
+
+    def __init__(self, name: str, category: str) -> None:
+        object.__setattr__(self, "name", name)
+        object.__setattr__(self, "category", category)
+        object.__setattr__(self, "configuration", {})
+        object.__setattr__(self, "history", [])
+
+    def __repr__(self) -> str:  # pragma: no cover - debugging helper
+        return f"{self.__class__.__name__}(name={self.name!r}, category={self.category!r})"
+
+    def __setattr__(self, key: str, value: Any) -> None:
+        if key in {"name", "category", "configuration", "history"}:
+            object.__setattr__(self, key, value)
+            return
+        self.configuration[key] = value
+        self.history.append((key, value))
+
+    def __getattr__(self, item: str):
+        def recorder(*args: Any, **kwargs: Any) -> "SecurityBuilder":
+            value = _normalise_call(args, kwargs)
+            self.configuration[item] = value
+            self.history.append((item, value))
+            return self
+
+        return recorder
+
+    def describe(self) -> Dict[str, Any]:
+        """Return a serialisable summary of the builder state."""
+
+        summary = {"name": self.name, "category": self.category, "configuration": dict(self.configuration)}
+        return summary
+
+
+class StaticSite(SecurityBuilder):
+    def __init__(self, name: str) -> None:
+        super().__init__(name, "static_site")
+
+
+class SecurityDocumentation(SecurityBuilder):
+    def __init__(self, name: str) -> None:
+        super().__init__(name, "security_documentation")
+
+
+class WebApp(SecurityBuilder):
+    def __init__(self, name: str) -> None:
+        super().__init__(name, "web_app")
+        object.__setattr__(self, "components", [])
+
+    def register_component(self, component: "Component") -> "WebApp":
+        self.components.append(component)
+        return self
+
+    def describe(self) -> Dict[str, Any]:
+        summary = super().describe()
+        if getattr(self, "components", None):
+            summary["components"] = [component.describe() for component in self.components]
+        return summary
+
+
+class Component(SecurityBuilder):
+    """Component-like builder for front-end modules."""
+
+    def __init__(self, name: str) -> None:
+        super().__init__(name, "component")
+        object.__setattr__(self, "methods", {})
+        object.__setattr__(self, "subscriptions", [])
+        object.__setattr__(self, "render_template", None)
+
+    def state(self, state: Dict[str, Any] | None = None, **kwargs: Any) -> "Component":
+        payload = dict(state or {})
+        payload.update(kwargs)
+        self.configuration["state"] = payload
+        self.history.append(("state", payload))
+        return self
+
+    def security(self, rules: Dict[str, Any] | None = None, **kwargs: Any) -> "Component":
+        payload = dict(rules or {})
+        payload.update(kwargs)
+        self.configuration["security"] = payload
+        self.history.append(("security", payload))
+        return self
+
+    def method(self, name: str, description: Any) -> "Component":
+        self.methods[name] = description
+        self.history.append((f"method:{name}", description))
+        return self
+
+    def subscription(self, description: Any) -> "Component":
+        self.subscriptions.append(description)
+        self.history.append(("subscription", description))
+        return self
+
+    def render(self, template: str) -> "Component":
+        self.render_template = template
+        self.history.append(("render", template))
+        return self
+
+    def describe(self) -> Dict[str, Any]:
+        summary = super().describe()
+        summary.update(
+            {
+                "methods": dict(self.methods),
+                "subscriptions": list(self.subscriptions),
+                "render": self.render_template,
+            }
+        )
+        return summary
+
+
+class ThreatFeedComponent(Component):
+    def __init__(self, name: str | None = None, **settings: Any) -> None:
+        super().__init__(name or "ThreatFeedComponent")
+        if settings:
+            self.configuration.update(settings)
+            for key, value in settings.items():
+                self.history.append((key, value))
+
+
+class IncidentTimelineComponent(Component):
+    def __init__(self, name: str | None = None, **settings: Any) -> None:
+        super().__init__(name or "IncidentTimelineComponent")
+        if settings:
+            self.configuration.update(settings)
+            for key, value in settings.items():
+                self.history.append((key, value))
+
+
+class NetworkMapComponent(Component):
+    def __init__(self, name: str | None = None, **settings: Any) -> None:
+        super().__init__(name or "NetworkMapComponent")
+        if settings:
+            self.configuration.update(settings)
+            for key, value in settings.items():
+                self.history.append((key, value))
+
+
+class ComplianceStatusComponent(Component):
+    def __init__(self, name: str | None = None, **settings: Any) -> None:
+        super().__init__(name or "ComplianceStatusComponent")
+        if settings:
+            self.configuration.update(settings)
+            for key, value in settings.items():
+                self.history.append((key, value))
+
+
+class Endpoint(SecurityBuilder):
+    def __init__(self, path: str, **options: Any) -> None:
+        super().__init__(path, "api_endpoint")
+        object.__setattr__(self, "handler_spec", None)
+        if options:
+            for key, value in options.items():
+                self.configuration[key] = value
+                self.history.append((key, value))
+
+    def handler(self, description: Any) -> "Endpoint":
+        self.handler_spec = description
+        self.history.append(("handler", description))
+        return self
+
+    def describe(self) -> Dict[str, Any]:
+        summary = super().describe()
+        summary["handler"] = self.handler_spec
+        return summary
+
+
+class WebAPI(SecurityBuilder):
+    def __init__(self, name: str) -> None:
+        super().__init__(name, "web_api")
+        object.__setattr__(self, "endpoints", [])
+
+    def endpoint(self, path: str, **options: Any) -> Endpoint:
+        endpoint = Endpoint(path, **options)
+        self.endpoints.append(endpoint)
+        return endpoint
+
+    def describe(self) -> Dict[str, Any]:
+        summary = super().describe()
+        if self.endpoints:
+            summary["endpoints"] = [endpoint.describe() for endpoint in self.endpoints]
+        return summary
+
+
+class RealTimeApp(SecurityBuilder):
+    def __init__(self, name: str) -> None:
+        super().__init__(name, "real_time_app")
+        object.__setattr__(self, "components", [])
+
+    def add_component(self, component: Component) -> "RealTimeApp":
+        self.components.append(component)
+        return self
+
+    def describe(self) -> Dict[str, Any]:
+        summary = super().describe()
+        if self.components:
+            summary["components"] = [component.describe() for component in self.components]
+        return summary
+
+
+class SecurityHeaders(SecurityBuilder):
+    def __init__(self) -> None:
+        super().__init__("security_headers", "headers")
+
+
+class InputValidator(SecurityBuilder):
+    def __init__(self) -> None:
+        super().__init__("input_validator", "validation")
+
+
+class AuthenticationSystem(SecurityBuilder):
+    def __init__(self) -> None:
+        super().__init__("authentication", "auth_system")
+
+
+class RBACSystem(SecurityBuilder):
+    def __init__(self) -> None:
+        super().__init__("rbac", "authorisation")
+
+
+class WebApplication(SecurityBuilder):
+    def __init__(self, name: str) -> None:
+        super().__init__(name, "web_application")
+
+
+class RealTimeDashboard(SecurityBuilder):
+    def __init__(self, name: str) -> None:
+        super().__init__(name, "dashboard")
+
+
+class FullStackApp(SecurityBuilder):
+    def __init__(self, name: str) -> None:
+        super().__init__(name, "full_stack_app")
+
+
+class BugBountyPlatform(SecurityBuilder):
+    def __init__(self, name: str) -> None:
+        super().__init__(name, "bug_bounty_platform")
+
+
+class SecureDeployment(SecurityBuilder):
+    def __init__(self, name: str) -> None:
+        super().__init__(name, "secure_deployment")
+        object.__setattr__(self, "security_gates", [])
+
+    def add_gate(self, gate: str) -> "SecureDeployment":
+        self.security_gates.append(gate)
+        self.history.append(("security_gates", list(self.security_gates)))
+        return self
+
+    def describe(self) -> Dict[str, Any]:
+        summary = super().describe()
+        summary["security_gates"] = list(self.security_gates)
+        return summary
+
+
+class CloudDeployment(SecurityBuilder):
+    def __init__(self, name: str) -> None:
+        super().__init__(name, "cloud_deployment")
+
+
+class ScanWorkflow(SecurityBuilder):
+    def __init__(self) -> None:
+        super().__init__("scan_workflow", "workflow")
+
+    def execute(self, project: Any) -> Dict[str, Any]:
+        summary = self.describe()
+        summary["project"] = project
+        return summary
+
+
+class ThreatIntelPlatform(SecurityBuilder):
+    def __init__(self, name: str) -> None:
+        super().__init__(name, "threat_intel_platform")
+
+
+class DetectionRuleSet(SecurityBuilder):
+    def __init__(self, name: str, rules: List[Dict[str, Any]]) -> None:
+        super().__init__(name, "detection_rules")
+        self.configuration["rules"] = list(rules)
+
+    def describe(self) -> Dict[str, Any]:
+        return super().describe()
+
+
+class RuleGenerator:
+    """Helper for generating detection rules from imported IOCs."""
+
+    @staticmethod
+    def create_from_iocs(iocs: Iterable[Dict[str, Any]]) -> DetectionRuleSet:
+        rules = [
+            {
+                "indicator": indicator,
+                "action": "alert",
+            }
+            for indicator in iocs
+        ]
+        return DetectionRuleSet("generated_rules", rules)
+
+
+class IOCProcessor:
+    """Utility responsible for importing IOCs from structured data."""
+
+    @staticmethod
+    def import_data(ioc_blob: Iterable[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        return [dict(entry) for entry in ioc_blob]
+
+    @staticmethod
+    def import_from_text(payload: str) -> List[Dict[str, Any]]:
+        lines = [line.strip() for line in payload.splitlines() if line.strip()]
+        return [{"indicator": line, "type": "generic"} for line in lines]
+
+
+class SIEM:
+    """Simple facade that records deployed rules."""
+
+    deployed_rules: List[Dict[str, Any]] = []
+
+    @classmethod
+    def deploy_rules(cls, rules: DetectionRuleSet) -> Dict[str, Any]:
+        cls.deployed_rules.extend(rules.configuration.get("rules", []))
+        return {"total_rules": len(cls.deployed_rules)}
+
+
+@dataclass
+class PacketLayer:
+    fields: Dict[str, Any] = field(default_factory=dict)
+
+
+class Packet:
+    """Composable packet builder used for low-level network interactions."""
+
+    def __init__(self) -> None:
+        self.ip = PacketLayer()
+        self.tcp = PacketLayer()
+        self.payload: Optional[str] = None
+
+    def describe(self) -> Dict[str, Any]:
+        return {
+            "ip": dict(self.ip.fields),
+            "tcp": dict(self.tcp.fields),
+            "payload": self.payload,
+        }
+
+
+@dataclass
+class Credential:
+    secret: str
+    valid: bool
+
+
+class NetworkTarget:
+    """Represents a network target under assessment."""
+
+    def __init__(self, address: str) -> None:
+        self.address = address
+        self.scanned_ports: List[int] = []
+
+    def port_scan(self, ports: Iterable[int]) -> Dict[str, Any]:
+        ports = list(ports)
+        self.scanned_ports.extend(ports)
+        return {"target": self.address, "open_ports": ports}
+
+
+def scan(address: str) -> NetworkTarget:
+    return NetworkTarget(address)
+
+
+def send_raw(packet: Packet) -> Dict[str, Any]:
+    return {"status": "sent", "packet": packet.describe()}
+
+
+def brute_force(target: Any, wordlist: str | None = None) -> Iterator[Credential]:
+    sample = ["password123", "letmein", "cybersecure!"]
+    for secret in sample:
+        yield Credential(secret=secret, valid=secret.endswith("!"))
+
+
+__all__ = [
+    "AuthenticationSystem",
+    "BugBountyPlatform",
+    "CloudDeployment",
+    "Component",
+    "ComplianceStatusComponent",
+    "Endpoint",
+    "FullStackApp",
+    "InputValidator",
+    "IOCProcessor",
+    "IncidentTimelineComponent",
+    "NetworkMapComponent",
+    "Packet",
+    "RealTimeApp",
+    "RealTimeDashboard",
+    "RBACSystem",
+    "RuleGenerator",
+    "ScanWorkflow",
+    "SecurityDocumentation",
+    "SecurityHeaders",
+    "SecureDeployment",
+    "SIEM",
+    "StaticSite",
+    "ThreatFeedComponent",
+    "ThreatIntelPlatform",
+    "WebAPI",
+    "WebApp",
+    "WebApplication",
+    "brute_force",
+    "scan",
+    "send_raw",
+]

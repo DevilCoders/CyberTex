@@ -112,4 +112,11 @@ Builds a cross-platform pipeline with embedded Rust agents, Perl orchestrators, 
 Models inheritance, encapsulation, and polymorphism with base classes and per-
 team overrides that integrate with the reporting helpers.
 
+## security_web_revolution.sapl
+
+Demonstrates the security web builders by composing static sites, SOC
+dashboards, threat intelligence ingestion, penetration testing platforms,
+secure deployment pipelines, and low-level network primitives inside a single
+plan.
+
 Use these scripts as templates when building your own SAPL projects.

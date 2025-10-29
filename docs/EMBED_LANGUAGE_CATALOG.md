@@ -35,7 +35,7 @@ consistent representation across execution results and exported artifacts.
 
 ## Extending the catalog
 
-The catalog lives in `sapl/language_registry.py`. To add a new language:
+The catalog lives in `sapl/language_registry.sapl`. To add a new language:
 
 1. Append an `EmbeddedLanguage` entry with canonical `name`, optional `aliases`,
    and an optional `description`.

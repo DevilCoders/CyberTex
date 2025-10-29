@@ -5,7 +5,8 @@ Optimise the SAPL development experience by configuring your editor or IDE to un
 ## Syntax Highlighting
 
 * Use the ANSI highlighter via `sapl highlight script.sapl --theme dark` to preview colouring.
-* For editors that support TextMate grammars, adapt the token list from `sapl/lexer.py` to build custom syntax definitions.
+* For editors that support TextMate grammars, adapt the token list from
+  `sapl/lexer.sapl` to build custom syntax definitions.
 
 ## Linting On Save
 
@@ -24,7 +25,8 @@ Optimise the SAPL development experience by configuring your editor or IDE to un
 
 ## Auto-Completion
 
-* Export Python stubs for standard library helpers by introspecting `sapl.stdlib.extended.EXTRA_FUNCTIONS` and generating `.pyi` files.
+* Export Python stubs for standard library helpers by introspecting
+  `sapl.stdlib.extended.EXTRA_FUNCTIONS` and generating `.pyi` files.
 * Register plugin-provided built-ins in stubs so IDEs can suggest names and types.
 
 ## Recommended Extensions

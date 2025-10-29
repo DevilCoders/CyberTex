@@ -49,7 +49,9 @@ compilers, and plugins.
 sapl-test tests/ --focus payloads --report junit.xml
 ```
 
-- Test discovery recognises `.sapl` fixtures alongside legacy `.py` and `.yaml` helpers when required.
+- Test discovery recognises `.sapl` fixtures alongside `.yaml` helpers when
+  required. Python sources no longer need `.py` companions because the runtime
+  imports SAPL modules directly.
 - Assertions cover runtime output, emitted artifacts, and compliance policies.
 - Rich reports integrate with CI dashboards and the SAPL website build pipeline.
 

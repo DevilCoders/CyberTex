@@ -17,6 +17,8 @@ Special Advanced Programming Language (SAPL) is a research-friendly language for
 - **Regex and analytics helpers** – dedicated `regex_*` built-ins wrap Python’s `re` module and return structured results for log parsing or payload analysis.
 - **Purple-team aware helpers** – structured blue- and red-team primitives model readiness metrics, response playbooks, and offensive campaigns side by side.
 - **Plugin ecosystem** – load `.sapl`-suffixed Python plugins via `--plugin` or `--plugin-dir` to register bespoke built-ins before execution, compilation, or testing.
+- **SAPL-native runtime** – the interpreter, CLI, advanced compiler, and stdlib now ship as `.sapl` sources loaded through the built-in importer so your entire toolchain embraces the same extension.
+- **Security web builders** – declaratively assemble static sites, SOC dashboards, APIs, and deployment pipelines with fluent builders that capture security posture alongside application intent.
 - **Embedded asset bundling** – register HTML, CSS, Python, PHP, SQL, Go, Java, JavaScript, Perl, Rust, Ruby, R, asm, C, C#, and C++ payloads with `EMBED`, attach metadata, and surface them across the CLI, inspector, and advanced compiler for packaging.
 - **Built-in testing harness** – run `python -m sapl test` to execute SAPL-native test suites alongside Python-based unit tests.
 - **Interactive CLI upgrades** – launch a stateful shell, inspect scripts without execution, and manage the bundled website straight from the CLI.
@@ -90,6 +92,7 @@ python -m sapl run examples/plugins/enrichment.sapl --plugin-dir examples/plugin
 - [Modules & Packages](docs/MODULES_AND_PACKAGES.md)
 - [Embedded Asset Bundling](docs/EMBEDDED_ASSETS.md)
 - [Embedded Language Catalog](docs/EMBED_LANGUAGE_CATALOG.md)
+- [Security Web Builders](docs/WEB_SECURITY_DEVELOPMENT.md)
 - [Structured Codebase Walkthrough](docs/STRUCTURED_CODEBASE.md)
 - [Regex Helper Overview](docs/REGEX.md)
 - [Polyglot Compilation Targets](docs/LANGUAGE_TARGETS.md)
@@ -177,6 +180,8 @@ Explore the new targeted guides:
   workflows.
 - `examples/object_modeling.sapl` for inheritance, encapsulation, and
   polymorphic execution across blue, red, and purple teams.
+- `examples/security_web_revolution.sapl` for end-to-end web and API builders
+  that embed security controls alongside UX components.
 
 ## Core language features
 
