@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import base64
 import inspect
 from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass, field
@@ -56,6 +57,7 @@ class ExecutionResult:
     scope: List[str]
     variables: Dict[str, Any]
     payloads: Dict[str, List[str]]
+    embedded_assets: Dict[str, Dict[str, Any]]
     tasks: List[Task]
     standalone_actions: List[Action]
     notes: List[str]
@@ -87,6 +89,7 @@ class ExecutionContext:
         self.targets: List[str] = []
         self.scope: List[str] = []
         self.payloads: Dict[str, List[str]] = {}
+        self.embedded_assets: Dict[str, Dict[str, Any]] = {}
         self.tasks: List[Task] = []
         self.standalone_actions: List[Action] = []
         self.notes: List[str] = []
@@ -135,6 +138,15 @@ class ExecutionContext:
             rendered.setdefault("target", self.targets[0])
         for name, values in self.payloads.items():
             rendered.setdefault(f"payload_{name}", values)
+        for name, asset in self.embedded_assets.items():
+            content = asset.get("content")
+            if isinstance(content, bytes):
+                rendered.setdefault(f"embed_{name}", content.decode("utf-8", "replace"))
+            else:
+                rendered.setdefault(f"embed_{name}", content)
+            metadata = asset.get("metadata")
+            if metadata is not None:
+                rendered.setdefault(f"embed_{name}_meta", metadata)
         return rendered
 
 
@@ -272,6 +284,14 @@ class Interpreter:
             scope=list(self.context.scope),
             variables=self._snapshot_variables(),
             payloads={key: list(value) for key, value in self.context.payloads.items()},
+            embedded_assets={
+                name: {
+                    "language": asset.get("language"),
+                    "content": asset.get("content"),
+                    "metadata": dict(asset.get("metadata", {})),
+                }
+                for name, asset in self.context.embedded_assets.items()
+            },
             tasks=list(self.context.tasks),
             standalone_actions=list(self.context.standalone_actions),
             notes=list(self.context.notes),
@@ -316,6 +336,54 @@ class Interpreter:
         if isinstance(statement, nodes.PayloadStatement):
             payload_values = [str(item) for item in self._coerce_iterable(statement.value, statement.line)]
             self.context.payloads[statement.name] = payload_values
+            return
+        if isinstance(statement, nodes.EmbedStatement):
+            language = str(statement.language).lower()
+            content_value = self._evaluate_expression(statement.content, statement.line)
+            metadata_value: Dict[str, Any] = {}
+            if statement.metadata is not None:
+                metadata_object = self._evaluate_expression(statement.metadata, statement.line)
+                if metadata_object is None:
+                    metadata_value = {}
+                elif isinstance(metadata_object, dict):
+                    metadata_value = dict(metadata_object)
+                else:
+                    raise RuntimeError("EMBED metadata must evaluate to a dictionary")
+            if isinstance(content_value, str):
+                stored_content: Any = self._interpolate(content_value)
+                original_length = len(stored_content)
+            elif isinstance(content_value, bytes):
+                original_length = len(content_value)
+                stored_content = base64.b64encode(content_value).decode("ascii")
+                metadata_value = dict(metadata_value)
+                metadata_value.setdefault("content_encoding", "base64")
+            else:
+                raise RuntimeError("EMBED content must evaluate to str or bytes")
+            asset = {
+                "language": language,
+                "content": stored_content,
+                "metadata": metadata_value,
+            }
+            self.context.embedded_assets[statement.name] = asset
+            preview_source = str(stored_content)
+            details = {
+                "language": language,
+                "metadata": metadata_value,
+                "length": original_length,
+            }
+            if isinstance(content_value, bytes):
+                details["encoding"] = "base64"
+            preview = preview_source.strip()
+            if preview:
+                details["preview"] = (preview[:80] + "…") if len(preview) > 80 else preview
+            self.context.add_action(
+                Action(
+                    kind="embed",
+                    summary=f"Embed {statement.name} ({language})",
+                    details=details,
+                    line=statement.line,
+                )
+            )
             return
         if isinstance(statement, nodes.TaskStatement):
             task_name = self._interpolate(statement.name)

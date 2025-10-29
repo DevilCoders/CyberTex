@@ -10,6 +10,7 @@ from .errors import LexError
 
 KEYWORDS = {
     "SET",
+    "EMBED",
     "TARGET",
     "SCOPE",
     "PAYLOAD",

@@ -215,6 +215,7 @@ class AdvancedCompiler:
         classes: List[Dict[str, Any]] = []
         imports: List[str] = []
         payloads: List[str] = []
+        embedded_assets: List[Dict[str, Any]] = []
         tasks: List[str] = []
 
         for statement in program.statements:
@@ -232,6 +233,18 @@ class AdvancedCompiler:
                     imports.append(f"from {module} import {alias}")
             elif isinstance(statement, nodes.PayloadStatement):
                 payloads.append(statement.name)
+            elif isinstance(statement, nodes.EmbedStatement):
+                embedded_assets.append(
+                    {
+                        "name": statement.name,
+                        "language": str(statement.language),
+                        "content": self._render_expression(statement.content),
+                        "metadata": self._render_expression(statement.metadata)
+                        if statement.metadata is not None
+                        else None,
+                        "line": statement.line,
+                    }
+                )
             elif isinstance(statement, nodes.TaskStatement):
                 tasks.append(statement.name)
 
@@ -241,6 +254,7 @@ class AdvancedCompiler:
             "functions": functions,
             "classes": classes,
             "payloads": payloads,
+            "embedded_assets": embedded_assets,
             "tasks": tasks,
         }
 

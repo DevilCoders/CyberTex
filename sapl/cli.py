@@ -229,6 +229,23 @@ def format_result(result: ExecutionResult) -> str:
     if result.payloads:
         for name, payloads in result.payloads.items():
             lines.append(f"Payload {name}: {', '.join(payloads)}")
+    if result.embedded_assets:
+        lines.append("\nEmbedded assets:")
+        for name, asset in result.embedded_assets.items():
+            language = asset.get("language", "unknown")
+            entry = f"  - {name} [{language}]"
+            metadata = asset.get("metadata") or {}
+            if metadata:
+                entry += f" meta={metadata}"
+            content = asset.get("content")
+            if isinstance(content, bytes):
+                preview_source = content.decode("utf-8", "replace")
+            else:
+                preview_source = str(content)
+            preview = preview_source.strip()
+            if preview:
+                entry += f" => {preview[:60]}{'…' if len(preview) > 60 else ''}"
+            lines.append(entry)
     for task in result.tasks:
         lines.append(f"\nTask: {task.name}")
         for action in task.steps:
@@ -951,6 +968,17 @@ def _format_inspection(summary) -> str:
         lines.append("\nPayloads:")
         for payload in summary.payloads:
             lines.append(f"  - {payload.name} = {payload.expression} (line {payload.line})")
+    if summary.embedded_assets:
+        lines.append("\nEmbedded assets:")
+        for asset in summary.embedded_assets:
+            meta = f" meta={asset.metadata}" if asset.metadata else ""
+            lines.append(
+                f"  - {asset.name} [{asset.language}] (line {asset.line}, scope {asset.scope}){meta}"
+            )
+            preview = asset.content
+            if preview:
+                trimmed = preview[:70] + ("…" if len(preview) > 70 else "")
+                lines.append(f"      {trimmed}")
     if summary.directives:
         lines.append("\nDirectives:")
         for directive in summary.directives:

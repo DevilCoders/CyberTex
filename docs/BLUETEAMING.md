@@ -53,5 +53,5 @@ NOTE "Current defensive readiness: {readiness['score']}"
 ## Combined workflows
 
 These helpers are available across interpreters, compilers, the linter, and the
-`python -m sapl test` harness. Defensive teams can therefore record detections,
+`sapl-test` harness. Defensive teams can therefore record detections,
 link them to runbooks, and export reports without leaving the SAPL ecosystem.

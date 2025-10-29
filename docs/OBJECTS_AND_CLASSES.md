@@ -9,6 +9,10 @@ blue, red, and purple team workflows.
 * Attributes and methods use Python-style syntax. Use `self` to reference the
   instance.
 * Docstrings on classes and methods improve inspector output and linter hints.
+* Support both instance and class attributes; leverage `IMMUTABLE` descriptors
+  when enforcing read-only state.
+* Two-line `##` comment blocks outline lifecycle expectations or integration
+  notes for operators.
 
 ## Inheritance
 
@@ -24,6 +28,10 @@ blue, red, and purple team workflows.
   over tasks without branching.
 * Combine with comprehension and lambda constructs to route events to the
   correct objects.
+* Implement properties via `@property` decorators for computed attributes while
+  keeping setters controlled.
+* Use mixin classes to share focused behaviour (e.g. logging, retry policies)
+  without deep inheritance chains.
 
 ## Integration with Other Features
 
@@ -31,6 +39,19 @@ blue, red, and purple team workflows.
   telemetry.
 * The advanced compiler lifts class definitions into all language backends,
   including Python, C#, Java, and Rust, preserving inheritance hierarchies.
+* Combine classes with custom exceptions to express domain errors (`RAISE
+  CredentialsExpiredError`). See [EXCEPTION_HANDLING.md](EXCEPTION_HANDLING.md)
+  for patterns.
+* Object metadata is accessible via `object_describe`, enabling runtime
+  inspection and IDE integrations described in [IDE_INTEGRATION.md](IDE_INTEGRATION.md).
+
+## Design Guidance
+
+* Keep methods short and side-effect aware to preserve maintainability.
+* Surface configuration via constructor parameters with sensible defaults to
+  support reuse across CLI, website, and server contexts.
+* Document class responsibilities in module-level comments to simplify code
+  reviews and plugin development.
 
 ## Example
 

@@ -1,0 +1,24 @@
+"Embedded asset showcase"
+
+TARGET ["https://portal.internal"]
+SET styles = ["dark", "contrast"]
+
+EMBED html landing_page = """
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Portal</title>
+</head>
+<body class="theme-{styles[0]}">
+    <h1>Welcome {target}</h1>
+</body>
+</html>
+""" USING {"path": "website/landing.html", "description": "Portal landing page"}
+
+EMBED javascript tracker = "console.log('Tracking {target}')" USING {"path": "website/assets/tracker.js"}
+
+TASK "Summarise embedded assets":
+    "Display what is currently staged for bundling"
+    NOTE "Landing preview length: {len(embed_landing_page)}"
+    NOTE "Tracker snippet: {embed_tracker}"

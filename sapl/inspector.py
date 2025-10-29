@@ -61,6 +61,16 @@ class PayloadSummary:
 
 
 @dataclass
+class EmbeddedAssetSummary:
+    name: str
+    language: str
+    scope: str
+    content: str
+    metadata: Optional[str]
+    line: int
+
+
+@dataclass
 class DirectiveSummary:
     kind: str
     expression: str
@@ -82,6 +92,7 @@ class ScriptSummary:
     imports: List[ImportSummary]
     variables: List[VariableSummary]
     payloads: List[PayloadSummary]
+    embedded_assets: List[EmbeddedAssetSummary]
     directives: List[DirectiveSummary]
     functions: List[FunctionSummary]
     classes: List[ClassSummary]
@@ -95,6 +106,7 @@ class ScriptSummary:
             "imports": [import_summary.__dict__ for import_summary in self.imports],
             "variables": [variable.__dict__ for variable in self.variables],
             "payloads": [payload.__dict__ for payload in self.payloads],
+            "embedded_assets": [asset.__dict__ for asset in self.embedded_assets],
             "directives": [directive.__dict__ for directive in self.directives],
             "functions": [
                 {
@@ -146,6 +158,7 @@ def _summarise_program(program: nodes.Program, *, path: str | None) -> ScriptSum
     imports: List[ImportSummary] = []
     variables: List[VariableSummary] = []
     payloads: List[PayloadSummary] = []
+    embedded_assets: List[EmbeddedAssetSummary] = []
     directives: List[DirectiveSummary] = []
     functions: List[FunctionSummary] = []
     classes: List[ClassSummary] = []
@@ -165,6 +178,7 @@ def _summarise_program(program: nodes.Program, *, path: str | None) -> ScriptSum
         imports=imports,
         variables=variables,
         payloads=payloads,
+        embedded_assets=embedded_assets,
         directives=directives,
         functions=functions,
         classes=classes,
@@ -175,6 +189,7 @@ def _summarise_program(program: nodes.Program, *, path: str | None) -> ScriptSum
         "imports": len(imports),
         "variables": len(variables),
         "payloads": len(payloads),
+        "embedded_assets": len(embedded_assets),
         "directives": len(directives),
         "functions": len(functions),
         "classes": len(classes),
@@ -187,6 +202,7 @@ def _summarise_program(program: nodes.Program, *, path: str | None) -> ScriptSum
         imports=imports,
         variables=variables,
         payloads=payloads,
+        embedded_assets=embedded_assets,
         directives=directives,
         functions=functions,
         classes=classes,
@@ -202,6 +218,7 @@ def _walk_statements(
     imports: List[ImportSummary],
     variables: List[VariableSummary],
     payloads: List[PayloadSummary],
+    embedded_assets: List[EmbeddedAssetSummary],
     directives: List[DirectiveSummary],
     functions: List[FunctionSummary],
     classes: List[ClassSummary],
@@ -233,6 +250,24 @@ def _walk_statements(
                 PayloadSummary(statement.name, _describe_expression(statement.value), statement.line)
             )
             continue
+        if isinstance(statement, nodes.EmbedStatement):
+            content_desc = _describe_expression(statement.content)
+            metadata_desc = (
+                _describe_expression(statement.metadata)
+                if statement.metadata is not None
+                else None
+            )
+            embedded_assets.append(
+                EmbeddedAssetSummary(
+                    statement.name,
+                    str(statement.language),
+                    scope_name,
+                    content_desc,
+                    metadata_desc,
+                    statement.line,
+                )
+            )
+            continue
         if isinstance(statement, nodes.TargetStatement) and not scope:
             directives.append(
                 DirectiveSummary("TARGET", _describe_expression(statement.value), statement.line)
@@ -257,6 +292,7 @@ def _walk_statements(
                 imports=imports,
                 variables=variables,
                 payloads=payloads,
+                embedded_assets=embedded_assets,
                 directives=directives,
                 functions=functions,
                 classes=classes,
@@ -290,6 +326,7 @@ def _walk_statements(
                 imports=imports,
                 variables=variables,
                 payloads=payloads,
+                embedded_assets=embedded_assets,
                 directives=directives,
                 functions=functions,
                 classes=classes,
@@ -308,6 +345,7 @@ def _walk_statements(
                 imports=imports,
                 variables=variables,
                 payloads=payloads,
+                embedded_assets=embedded_assets,
                 directives=directives,
                 functions=functions,
                 classes=classes,

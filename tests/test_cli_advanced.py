@@ -33,6 +33,7 @@ def test_inspect_command_json(tmp_path, capsys):
     payload = json.loads(captured.out)
     assert payload["docstring"] == "Inspection module"
     assert payload["statistics"]["functions"] >= 1
+    assert "embedded_assets" in payload["statistics"]
     assert any(item["name"] == "helper" for item in payload["functions"])
     assert any(item["name"] == "Worker" for item in payload["classes"])
     assert any(item["name"] == "probes" for item in payload["payloads"])

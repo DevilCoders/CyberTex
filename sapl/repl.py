@@ -22,6 +22,7 @@ class ShellDelta:
     targets: List[str]
     scope: List[str]
     payloads: Dict[str, List[str]]
+    embedded_assets: Dict[str, Dict[str, object]]
     tasks: List[Task]
     standalone_actions: List[Action]
     notes: List[str]
@@ -36,6 +37,9 @@ def delta_to_dict(delta: ShellDelta) -> Dict[str, object]:
         "targets": list(delta.targets),
         "scope": list(delta.scope),
         "payloads": {key: list(values) for key, values in delta.payloads.items()},
+        "embedded_assets": {
+            name: dict(details) for name, details in delta.embedded_assets.items()
+        },
         "notes": list(delta.notes),
         "findings": [asdict(finding) for finding in delta.findings],
         "tasks": [asdict(task) for task in delta.tasks],
@@ -118,6 +122,22 @@ class SAPLRepl:
             for name, payloads in sorted(delta.payloads.items()):
                 rendered = ", ".join(payloads)
                 lines.append(f"  {name}: {rendered}")
+        if delta.embedded_assets:
+            lines.append("Embedded assets registered:")
+            for name, asset in sorted(delta.embedded_assets.items()):
+                language = asset.get("language", "unknown")
+                metadata = asset.get("metadata") or {}
+                line = f"  - {name} [{language}]"
+                if metadata:
+                    line += f" meta={metadata}"
+                content = asset.get("content")
+                if isinstance(content, bytes):
+                    preview = content.decode("utf-8", "replace").strip()
+                else:
+                    preview = str(content).strip()
+                if preview:
+                    line += f" => {preview[:60]}{'…' if len(preview) > 60 else ''}"
+                lines.append(line)
         if delta.tasks:
             lines.append("Tasks added:")
             for task in delta.tasks:
@@ -257,6 +277,9 @@ class SAPLRepl:
             "targets": list(context.targets),
             "scope": list(context.scope),
             "payloads": {name: list(values) for name, values in context.payloads.items()},
+            "embedded_assets": {
+                name: dict(asset) for name, asset in context.embedded_assets.items()
+            },
             "tasks": len(context.tasks),
             "actions": len(context.standalone_actions),
             "notes": len(context.notes),
@@ -280,6 +303,11 @@ class SAPLRepl:
         for name, values in context.payloads.items():
             if previous_payloads.get(name) != values:
                 new_payloads[name] = list(values)
+        previous_embeds: Dict[str, Dict[str, object]] = before.get("embedded_assets", {})  # type: ignore[assignment]
+        new_embeds: Dict[str, Dict[str, object]] = {}
+        for name, asset in context.embedded_assets.items():
+            if previous_embeds.get(name) != asset:
+                new_embeds[name] = dict(asset)
         previous_tasks = before.get("tasks", 0)
         previous_actions = before.get("actions", 0)
         previous_notes = before.get("notes", 0)
@@ -293,6 +321,7 @@ class SAPLRepl:
             targets=list(new_targets),
             scope=list(new_scope),
             payloads=new_payloads,
+            embedded_assets=new_embeds,
             tasks=list(new_tasks),
             standalone_actions=list(new_actions),
             notes=list(new_notes),

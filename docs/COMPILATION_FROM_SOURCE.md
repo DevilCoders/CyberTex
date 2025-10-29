@@ -13,20 +13,20 @@ The SAPL toolchain ships with multiple backends, allowing you to compile scripts
 Compile a script into the default machine-code listing:
 
 ```bash
-python -m sapl compile examples/basic.sapl
+sapl compile examples/basic.sapl
 ```
 
 To emit bytecode or Python source:
 
 ```bash
-python -m sapl compile examples/basic.sapl --target bytecode
-python -m sapl compile examples/basic.sapl --target python
+sapl compile examples/basic.sapl --target bytecode
+sapl compile examples/basic.sapl --target python
 ```
 
 The advanced compiler provides metadata useful for build systems:
 
 ```bash
-python -m sapl advanced-compile examples/basic.sapl --target python --json
+sapl compile examples/basic.sapl --target python --analyze --format json
 ```
 
 ## Building With Plugins
@@ -34,7 +34,7 @@ python -m sapl advanced-compile examples/basic.sapl --target python --json
 Plugins can extend the compiler pipeline—for example adding custom optimization passes. Pass one or more plugins using the CLI:
 
 ```bash
-python -m sapl compile scripts/app.sapl --plugin my_plugins.optimizer
+sapl compile scripts/app.sapl --plugin my_plugins.optimizer
 ```
 
 Plugins loaded during compilation can register additional built-ins or modify interpreter behaviour before bytecode generation.
@@ -43,14 +43,15 @@ Plugins loaded during compilation can register additional built-ins or modify in
 
 When compiling in CI:
 
-1. Ensure the repository is checked out and dependencies installed (`pip install -r sapl/required.yaml`).
-2. Run tests using `python -m sapl test` to validate the project before compilation.
+1. Ensure the repository is checked out and dependencies installed (`sapl env sync`).
+2. Run tests using `sapl-test` to validate the project before compilation.
 3. Invoke the required compilation target, capturing the output artifact.
 4. Archive generated files as CI artifacts for later deployment.
+5. Optionally push results to the SAPL server or website for stakeholder review.
 
 ## Platform Notes
 
-* **Linux/macOS** – Scripts run directly under Python; use `make` or shell scripts to automate compilation.
+* **Linux/macOS** – Scripts run directly under Python; use `make` or shell scripts to automate compilation. Integrate `sapl env` commands to provision dependencies on CI runners.
 * **Windows** – Use PowerShell scripts or GitHub Actions workflows to drive `sapl` commands. Ensure the terminal supports UTF-8 for coloured diagnostics.
 
 ## Troubleshooting

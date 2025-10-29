@@ -73,6 +73,8 @@ class Parser:
             return self._parse_scope()
         if token.type == "PAYLOAD":
             return self._parse_payload()
+        if token.type == "EMBED":
+            return self._parse_embed()
         if token.type == "TASK":
             return self._parse_task()
         if token.type == "PORTSCAN":
@@ -154,6 +156,24 @@ class Parser:
         self._consume("ASSIGN", "Expected '=' after payload name")
         value = self._expression()
         return nodes.PayloadStatement(name.value, value, keyword.line)
+
+    def _parse_embed(self) -> nodes.EmbedStatement:
+        keyword = self._consume("EMBED")
+        language_token = self._advance()
+        if language_token.type not in {"IDENT", "STRING"}:
+            raise ParseError(language_token.line, language_token.column, "Expected embed language identifier or string")
+        language = language_token.value
+        if isinstance(language, str):
+            language_value = language
+        else:
+            language_value = str(language)
+        name_token = self._consume("IDENT", "Expected identifier after embed language")
+        self._consume("ASSIGN", "Expected '=' after embed name")
+        content = self._expression()
+        metadata = None
+        if self._match("USING"):
+            metadata = self._expression()
+        return nodes.EmbedStatement(language_value, name_token.value, content, keyword.line, metadata)
 
     def _parse_task(self) -> nodes.TaskStatement:
         keyword = self._consume("TASK")

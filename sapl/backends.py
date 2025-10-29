@@ -306,6 +306,17 @@ class Transpiler:
         if isinstance(statement, nodes.OutputStatement):
             lines.append(f"{prefix}print({self._emit_expression(statement.value)})")
             return
+        if isinstance(statement, nodes.EmbedStatement):
+            metadata = (
+                f" meta={self._emit_expression(statement.metadata)}"
+                if statement.metadata is not None
+                else ""
+            )
+            lines.append(
+                f"{prefix}# EMBED {statement.name} [{statement.language}]{metadata}"
+            )
+            lines.append(f"{prefix}{repr(self._emit_expression(statement.content))}")
+            return
         lines.append(f"{prefix}# Unsupported statement: {type(statement).__name__}")
 
     def _emit_expression(self, expression: nodes.Expression) -> str:

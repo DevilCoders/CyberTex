@@ -9,5 +9,6 @@ The comprehensive documentation suite aggregates deep-dive guidance for advanced
 - [Plugin Architecture](PLUGIN_ARCHITECTURE.md): Guidance for building, packaging, and distributing reusable extensions.
 - [Workflow Playbooks](WORKFLOWS.md): End-to-end recipes for research teams deploying SAPL in collaborative environments.
 - [Website Overview](WEBSITE_OVERVIEW.md): Documentation for the bundled advanced website, its structure, and deployment recommendations.
+- [Embedded Assets](../docs/EMBEDDED_ASSETS.md): Field manual for the `EMBED` statement, metadata conventions, and packaging workflows.
 
 All documents are designed to be read together, with cross-references that explain how concepts connect across the toolchain.

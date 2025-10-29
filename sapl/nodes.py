@@ -162,6 +162,15 @@ class PayloadStatement:
 
 
 @dataclass
+class EmbedStatement:
+    language: str
+    name: str
+    content: Expression
+    line: int
+    metadata: Expression | None = None
+
+
+@dataclass
 class TaskStatement:
     name: str
     body: Sequence[Any]

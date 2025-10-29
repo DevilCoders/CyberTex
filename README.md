@@ -17,6 +17,7 @@ Special Advanced Programming Language (SAPL) is a research-friendly language for
 - **Regex and analytics helpers** – dedicated `regex_*` built-ins wrap Python’s `re` module and return structured results for log parsing or payload analysis.
 - **Purple-team aware helpers** – structured blue- and red-team primitives model readiness metrics, response playbooks, and offensive campaigns side by side.
 - **Plugin ecosystem** – load Python plugins via `--plugin` or `--plugin-dir` to register bespoke built-ins before execution, compilation, or testing.
+- **Embedded asset bundling** – register multi-language payloads with `EMBED`, attach metadata, and surface them across the CLI, inspector, and advanced compiler for packaging.
 - **Built-in testing harness** – run `python -m sapl test` to execute SAPL-native test suites alongside Python-based unit tests.
 - **Interactive CLI upgrades** – launch a stateful shell, inspect scripts without execution, and manage the bundled website straight from the CLI.
 
@@ -87,6 +88,7 @@ python -m sapl run examples/plugins/enrichment.sapl --plugin-dir examples/plugin
 - [IDE Integration](docs/IDE_INTEGRATION.md)
 - [Creating Packages & Libraries](docs/PACKAGING.md)
 - [Modules & Packages](docs/MODULES_AND_PACKAGES.md)
+- [Embedded Asset Bundling](docs/EMBEDDED_ASSETS.md)
 - [Structured Codebase Walkthrough](docs/STRUCTURED_CODEBASE.md)
 - [Regex Helper Overview](docs/REGEX.md)
 - [Polyglot Compilation Targets](docs/LANGUAGE_TARGETS.md)
@@ -155,7 +157,7 @@ REPORT "reports/{report_name}-findings.md"
 
 Running the playbook above builds a structured execution plan, interpolating variables across tasks and actions while maintaining a full audit trail of findings, notes, payloads, and generated artifacts.
 
-For a hands-on tour of the extended helper catalogue, see `examples/extended_features.sapl`, which walks through conversions, object inspection, string helpers, file IO, and custom exception handling in one self-contained script.
+For a hands-on tour of the extended helper catalogue, see `examples/extended_features.sapl`, which walks through conversions, object inspection, string helpers, file IO, and custom exception handling in one self-contained script. To experiment with embedded multi-language assets and metadata aware packaging, start with `examples/embedding_demo.sapl`.
 
 For a multi-module walkthrough covering inheritance, encapsulation, and
 package-driven reuse, execute `examples/structured_project/main.sapl`.

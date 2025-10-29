@@ -23,7 +23,7 @@ project/
 │   └── response.sapl
 ├── plugins/
 │   └── enrichment.py
-├── sapl-required.yaml
+├── required.yaml
 └── website/
     └── ...
 ```
@@ -47,7 +47,7 @@ project/
 
 ## Dependency Management
 
-* `sapl-required.yaml` declares Python packages and plugin entry points.
+* `required.yaml` declares Python packages and plugin entry points.
 * `sapl environment` provisions a virtual environment with cross-platform
   compatibility for Linux, macOS, and Windows operators.
 
@@ -57,3 +57,7 @@ project/
 * `docs/PLUGINS.md` for extending the runtime.
 * `docs/GUI_AND_CLI_COMPILATION.md` for delivery patterns covering GUI and CLI
   deployments.
+* `docs/SAPL_CLI.md`, `docs/SAPL_SERVER.md`, and `docs/SAPL_WEBSITE.md` for
+  end-to-end tooling orchestration.
+* `docs/SAPL_ENVIRONMENTS.md` for environment automation linked to
+  `required.yaml` profiles.

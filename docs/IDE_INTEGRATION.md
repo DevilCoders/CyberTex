@@ -4,18 +4,18 @@ Optimise the SAPL development experience by configuring your editor or IDE to un
 
 ## Syntax Highlighting
 
-* Use the ANSI highlighter via `python -m sapl highlight script.sapl --theme dark` to preview colouring.
+* Use the ANSI highlighter via `sapl highlight script.sapl --theme dark` to preview colouring.
 * For editors that support TextMate grammars, adapt the token list from `sapl/lexer.py` to build custom syntax definitions.
 
 ## Linting On Save
 
-* Configure your editor to run `python -m sapl lint <file>` on save and surface diagnostics in the editor gutter.
+* Configure your editor to run `sapl lint <file>` on save and surface diagnostics in the editor gutter.
 * Many editors (VS Code, JetBrains IDEs) support problem matchers; capture lines formatted by the linter to display inline errors.
 
 ## Running Tests
 
-* Register a task that invokes `python -m sapl test tests/`.
-* Capture JSON output (`--json`) to integrate with IDE test explorers.
+* Register a task that invokes `sapl-test tests/`.
+* Capture JSON output (`--format json`) to integrate with IDE test explorers.
 
 ## Debugging
 
@@ -29,5 +29,5 @@ Optimise the SAPL development experience by configuring your editor or IDE to un
 
 ## Recommended Extensions
 
-* **VS Code** – configure tasks for linting and testing, and install the *Better TOML* or *YAML* extensions for editing `sapl-required.yaml`.
+* **VS Code** – configure tasks for linting and testing, and install the *Better TOML* or *YAML* extensions for editing `required.yaml`.
 * **PyCharm/IntelliJ** – add a Python run configuration for `sapl.cli.main` and enable *File Watchers* to run linting on file changes.

@@ -198,6 +198,24 @@ def test_comprehension_lambda_and_async_behaviour():
     assert result.variables["fetched"] == 6
 
 
+def test_embed_statement_registers_assets():
+    source = "\n".join(
+        [
+            'TARGET ["https://acme.local"]',
+            'EMBED html landing = "<h1>{target}</h1>" USING {"path": "site/index.html", "tags": ["web", "demo"]}',
+        ]
+    )
+    result = evaluate(source)
+    assert "landing" in result.embedded_assets
+    asset = result.embedded_assets["landing"]
+    assert asset["language"] == "html"
+    assert asset["metadata"]["path"] == "site/index.html"
+    assert asset["metadata"]["tags"] == ["web", "demo"]
+    assert asset["content"] == "<h1>https://acme.local</h1>"
+    embed_actions = [action for action in result.standalone_actions if action.kind == "embed"]
+    assert embed_actions and "landing" in embed_actions[0].summary
+
+
 def test_extended_helper_functions(tmp_path: Path):
     file_path = tmp_path / "helpers.txt"
     source = "\n".join(
