@@ -7,6 +7,8 @@ SAPL balances expressiveness with runtime performance. This guide outlines strat
 * Prefer list comprehensions and built-in helpers (`map_list`, `filter_list`) for data-heavy tasks.
 * Reuse compiled regex objects via `regex_compile` when matching repeatedly.
 * Cache expensive lookups inside functions rather than recomputing at every call site.
+* Leverage `sapl profile` to capture flame graphs directly from SAPL execution
+  without transpiling to Python.
 
 ## Asynchronous Workflows
 
@@ -15,7 +17,8 @@ SAPL balances expressiveness with runtime performance. This guide outlines strat
 
 ## Profiling
 
-* Use Python's `cProfile` to profile transpiled Python output.
+* Use Python's `cProfile` to profile transpiled Python output when targeting CLI
+  or GUI builds.
 * For direct SAPL execution, wrap heavy sections in timing helpers registered by plugins:
 
 ```python
@@ -41,9 +44,13 @@ NOTE "Fetch hosts took {report['duration']}s"
 ## Large Projects
 
 * Break workflows into packages and import only the modules required for each script.
-* Use the advanced compiler metadata to understand dependency graphs before deployment.
+* Use the advanced compiler metadata to understand dependency graphs before deployment. `sapl compile --analyze` emits JSON
+  reports summarising hotspots and slow imports.
+* Configure caching paths in `required.yaml` to reuse bytecode across hosts.
 
 ## Testing For Performance
 
 * Integrate `sapl-test` suites that validate response times (for example asserting a function returns within a threshold).
 * Run performance-sensitive tests on representative hardware to capture realistic metrics.
+* Track performance budgets in `docs/PERFORMANCE.md` and surface them on the
+  SAPL website to keep teams aligned.

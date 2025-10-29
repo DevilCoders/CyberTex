@@ -51,6 +51,25 @@ TASK "Parse application logs":
         FINDING medium "Observed failure code {entry['code']}"
 ```
 
+For multi-stage parsing, chain regex calls with list comprehensions:
+
+```sapl
+SET indicators = [match['groupdict']
+                  FOR match IN regex_findall(pattern, payload)
+                  IF match['groupdict']['tld'] IN allowed_tlds]
+```
+
+This approach keeps transformations succinct while remaining readable.
+
 ## Testing Regex-Based Logic
 
-Leverage `sapl-test` to validate regex-heavy utilities. Place regex helper assertions inside `test_` functions and execute `python -m sapl test path/to/tests` to ensure patterns behave as expected.
+Leverage `sapl-test` to validate regex-heavy utilities. Place regex helper assertions inside `test_` functions and execute `sapl-test path/to/tests` to ensure patterns behave as expected.
+
+## Performance and Maintainability
+
+* Reuse compiled patterns (`regex_compile`) for tight loops or large datasets.
+* Document complex expressions with inline comments and verbose mode (`(?x)`)
+  to aid future reviewers.
+* The advanced compiler flags catastrophic backtracking during `--analyze`.
+  Address warnings by tightening quantifiers or using atomic groups where
+  available.

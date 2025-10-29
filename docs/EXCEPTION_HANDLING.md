@@ -11,6 +11,10 @@ structured exception semantics while adding tooling for security operations.
   created via `CLASS`.
 * Custom exceptions can inherit from `Error`, `RuntimeError`, or any Python
   exception exposed through imports.
+* Combine `TRY`/`FINALLY` to guarantee resource cleanup when working with files,
+  sockets, or temporary environments.
+* Exception hierarchies mirror Python's semantics, letting you trap broad
+  categories while still raising team-specific subclasses.
 
 ## Runtime Helpers
 
@@ -18,6 +22,8 @@ structured exception semantics while adding tooling for security operations.
   `capture_exception` to wrap risky calls.
 * `sapl.testing` integrates exception assertions for both synchronous and async
   playbooks.
+* Use `with suppress_errors(ErrorType):` to intentionally swallow known-safe
+  failures during exploratory operations.
 
 ## Reporting Failures
 
@@ -25,6 +31,8 @@ structured exception semantics while adding tooling for security operations.
   mitigation of observed failures.
 * The advanced compiler can emit structured traces for Python, Rust, Go, and C
   targets, ensuring downstream tooling receives the same reliability insights.
+* Emit metrics (`METRIC failure_count += 1`) inside handlers to feed dashboards
+  on the SAPL website.
 
 ## Example
 

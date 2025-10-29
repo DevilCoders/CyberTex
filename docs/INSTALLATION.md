@@ -23,13 +23,15 @@ All examples use a shell prompt. Replace paths with your own directories as need
    python -m venv .venv
    .\.venv\Scripts\Activate.ps1
    ```
-4. Install dependencies listed in `sapl-required.yaml`:
+4. Install dependencies listed in `required.yaml` using the SAPL CLI:
    ```powershell
-   pip install -r sapl/required.yaml
+   sapl env create
+   sapl env sync
    ```
-5. Verify the installation:
+5. Verify the installation and optional subcommands:
    ```powershell
-   python -m sapl --help
+   sapl --help
+   sapl-test --help
    ```
 
 ## Linux
@@ -47,11 +49,13 @@ All examples use a shell prompt. Replace paths with your own directories as need
    ```
 4. Install dependencies:
    ```bash
-   pip install -r sapl/required.yaml
+   sapl env create
+   sapl env sync
    ```
 5. Run the CLI to confirm the installation:
    ```bash
-   python -m sapl --help
+   sapl --help
+   sapl compile --help
    ```
 
 ## macOS
@@ -69,15 +73,19 @@ All examples use a shell prompt. Replace paths with your own directories as need
    ```
 4. Install runtime dependencies:
    ```bash
-   pip install -r sapl/required.yaml
+   sapl env create
+   sapl env sync
    ```
 5. Run the CLI help to confirm:
    ```bash
-   python -m sapl --help
+   sapl --help
+   sapl website --help
    ```
 
 ## Troubleshooting Tips
 
 * On Windows, ensure the terminal is opened *after* installing Python so the PATH changes take effect.
-* When using corporate proxies, configure `pip` with the appropriate proxy settings before installing.
+* When using corporate proxies, configure `pip` or the `SAPL_INDEX_URL` environment variable before installing.
 * If the optional native backends fail to compile, install build tools such as *Build Tools for Visual Studio* (Windows) or Xcode Command Line Tools (macOS).
+* Refer to [SAPL_ENVIRONMENTS.md](SAPL_ENVIRONMENTS.md) for advanced environment
+  management, including offline mirrors and per-team profiles.
