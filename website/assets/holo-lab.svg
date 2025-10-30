@@ -1,0 +1,26 @@
+<svg width="360" height="240" viewBox="0 0 360 240" xmlns="http://www.w3.org/2000/svg" role="img">
+  <defs>
+    <linearGradient id="scan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6dfcff" stop-opacity="0.1" />
+      <stop offset="50%" stop-color="#6dfcff" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#ff6df2" stop-opacity="0.25" />
+    </linearGradient>
+  </defs>
+  <rect width="360" height="240" rx="24" fill="#030712" />
+  <g stroke="#0d9aff" stroke-width="0.8" opacity="0.4">
+    <rect x="28" y="32" width="304" height="176" rx="16" fill="none" />
+    <path d="M28 72h304M28 112h304M28 152h304M28 192h304" />
+    <path d="M88 32v176M148 32v176M208 32v176M268 32v176" />
+  </g>
+  <rect x="28" y="80" width="304" height="16" fill="url(#scan)" />
+  <g fill="#6dfcff">
+    <circle cx="92" cy="60" r="6" />
+    <circle cx="160" cy="108" r="6" />
+    <circle cx="236" cy="156" r="6" />
+    <circle cx="300" cy="92" r="6" />
+  </g>
+  <polyline points="92,60 160,108 236,156 300,92" fill="none" stroke="#ff6df2" stroke-width="2" />
+  <text x="40" y="212" fill="#45d1ff" font-family="Chakra Petch, monospace" font-size="12" letter-spacing="4">
+    TELEMETRY LIVE • DRIFT 0.2PPM
+  </text>
+</svg>

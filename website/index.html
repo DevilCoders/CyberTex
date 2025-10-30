@@ -3,31 +3,244 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SAPL Advanced Website</title>
+    <title>SAPL // NextGen Operations Hub</title>
+    <meta
+      name="description"
+      content="Command the SAPL automation grid with immersive documentation, runnable sandboxes, and 2050-grade interface patterns."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="assets/styles.css" />
   </head>
   <body>
-    <header class="hero">
-      <div class="hero__content">
-        <h1>SAPL Advanced Platform</h1>
-        <p>Purpose-built tooling for cybersecurity researchers, red teams, and automation specialists.</p>
-        <nav class="hero__nav">
-          <button data-section="sections/cli.html">CLI</button>
-          <button data-section="sections/plugins.html">Plugins</button>
-          <button data-section="sections/workflows.html">Workflows</button>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand" href="#overview" aria-label="SAPL NextGen home">
+          <span class="brand__mark" aria-hidden="true">✶</span>
+          <span class="brand__text">SAPL // NX-2050</span>
+        </a>
+        <div class="header-ticker" aria-hidden="true">
+          <span>quantum-trust verified</span>
+          <span>last sync &lt; 4s</span>
+          <span>zero-drift pipelines</span>
+        </div>
+        <nav class="site-nav" aria-label="Documentation navigation" role="tablist">
+          <button
+            class="site-nav__button"
+            type="button"
+            id="tab-overview"
+            role="tab"
+            data-section="sections/overview.html"
+            data-slug="overview"
+            aria-controls="content"
+          >
+            Overview
+          </button>
+          <button
+            class="site-nav__button"
+            type="button"
+            id="tab-cli"
+            role="tab"
+            data-section="sections/cli.html"
+            data-slug="cli"
+            aria-controls="content"
+          >
+            CLI
+          </button>
+          <button
+            class="site-nav__button"
+            type="button"
+            id="tab-plugins"
+            role="tab"
+            data-section="sections/plugins.html"
+            data-slug="plugins"
+            aria-controls="content"
+          >
+            Plugins
+          </button>
+          <button
+            class="site-nav__button"
+            type="button"
+            id="tab-workflows"
+            role="tab"
+            data-section="sections/workflows.html"
+            data-slug="workflows"
+            aria-controls="content"
+          >
+            Workflows
+          </button>
         </nav>
+        <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false">
+          <span class="theme-toggle__icon" aria-hidden="true">🌙</span>
+          <span class="theme-toggle__label">Toggle theme</span>
+        </button>
       </div>
     </header>
-    <main id="content" class="content">
-      <article>
-        <h2>Welcome</h2>
-        <p>Select a section above to explore the SAPL ecosystem.</p>
-        <p>The CLI, runtime, and plugin guides are synchronised with the Markdown documents found in <code>comprehensive_docs/</code>.</p>
-      </article>
+    <main class="page">
+      <section class="hero">
+        <div class="hero__inner">
+          <div class="hero__copy">
+            <p class="eyebrow">Security Automation Playbook Language</p>
+            <h1>
+              <span class="glitch" aria-hidden="true">2050</span>
+              <span class="glitch__label">2050</span>
+              automation cockpit
+            </h1>
+            <p>
+              Operate SAPL like a senior systems architect: inspect realtime execution lines,
+              inject new policies, and publish shareable holographic docs in a single orbital view.
+            </p>
+            <div class="hero__actions">
+              <a class="button button--primary" href="#overview">Jack into docs</a>
+              <a class="button button--ghost" href="../comprehensive_docs" target="_blank" rel="noreferrer">
+                Deep archive
+              </a>
+            </div>
+          </div>
+          <div class="hero__visual" aria-hidden="true">
+            <div class="hero__visual-layer hero__visual-layer--grid"></div>
+            <div class="hero__visual-layer hero__visual-layer--orb"></div>
+            <div class="hero__visual-layer hero__visual-layer--hud">
+              <p class="hud-label">Telemetry span</p>
+              <ul>
+                <li><span>12</span> entangled playbooks</li>
+                <li><span>6</span> pending approvals</li>
+                <li><span>42</span> autonomous checks</li>
+              </ul>
+              <p class="hud-caption">Predictive confidence: 99.2%</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="matrix" aria-label="System highlights">
+        <article class="matrix-card">
+          <header>
+            <span class="matrix-card__icon" aria-hidden="true">⌁</span>
+            <h2>Meta-governance streams</h2>
+          </header>
+          <p>
+            Policy definitions converge with runtime evidence; weave guardrails and proofs without
+            stepping outside the cockpit.
+          </p>
+        </article>
+        <article class="matrix-card">
+          <header>
+            <span class="matrix-card__icon" aria-hidden="true">✺</span>
+            <h2>Holographic knowledge</h2>
+          </header>
+          <p>
+            Every section syncs live Markdown, interactive sandboxes, and scenario models so your team
+            can craft novel automations fast.
+          </p>
+        </article>
+        <article class="matrix-card">
+          <header>
+            <span class="matrix-card__icon" aria-hidden="true">◇</span>
+            <h2>Zero-drift pipelines</h2>
+          </header>
+          <p>
+            Compose multi-cloud workflows, observe drift in realtime, and commit fixes directly from
+            the embedded consoles.
+          </p>
+        </article>
+      </section>
+      <section class="knowledge">
+        <div class="knowledge__intro">
+          <h2>Mission control for SAPL builders</h2>
+          <p>
+            Spin up context-specific documentation, copy advanced snippets, or simulate test runs
+            before pushing to production.
+          </p>
+        </div>
+        <div class="content-pane" role="presentation">
+          <div class="content-pane__loader" hidden aria-hidden="true">
+            <span class="content-pane__shimmer"></span>
+            <span class="visually-hidden">Loading content…</span>
+          </div>
+          <div
+            class="content-pane__body"
+            id="content"
+            role="tabpanel"
+            tabindex="-1"
+            aria-live="polite"
+            aria-busy="false"
+            aria-labelledby="tab-overview"
+          >
+            <article class="prose">
+              <header class="prose__header">
+                <h2>Calibrating the console</h2>
+                <p>Select a stream above to load the corresponding holofile.</p>
+              </header>
+              <p>
+                The CLI, runtime, and plugin dossiers are synchronised with the Markdown documents in
+                <code>comprehensive_docs/</code>. Choose a tab to load contextual guidance without leaving
+                this page.
+              </p>
+            </article>
+          </div>
+        </div>
+        <aside class="sidebar" aria-label="Quantum signals">
+          <h2>Quantum signals</h2>
+          <dl>
+            <div>
+              <dt>Language core</dt>
+              <dd>Python, YAML, &amp; DSL entanglements</dd>
+            </div>
+            <div>
+              <dt>Observability</dt>
+              <dd>Event-driven with drift diffing</dd>
+            </div>
+            <div>
+              <dt>Latency budget</dt>
+              <dd>&lt; 12 ms per automation branch</dd>
+            </div>
+            <div>
+              <dt>Sandbox</dt>
+              <dd>Inline quantum-grade simulators</dd>
+            </div>
+          </dl>
+        </aside>
+      </section>
+      <section class="timeline" aria-label="Execution timeline">
+        <h2>Execution timeline</h2>
+        <ol>
+          <li>
+            <span>00:00:02</span>
+            Initiate zero-trust handshake with remote agents.
+          </li>
+          <li>
+            <span>00:00:06</span>
+            Compile SAPL manifest and cross-check invariants.
+          </li>
+          <li>
+            <span>00:00:12</span>
+            Dispatch workflow shards &amp; aggregate telemetry.
+          </li>
+          <li>
+            <span>00:00:20</span>
+            Emit compliance and drift reports to knowledge base.
+          </li>
+        </ol>
+      </section>
     </main>
-    <footer class="footer">
-      <p>Generated with ❤️ by the SAPL toolchain. Use <code>sapl website --serve</code> to preview locally.</p>
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <div>
+          <h2>SAPL NextGen Collective</h2>
+          <p>Built for teams who automate with style, security, and shared knowledge.</p>
+        </div>
+        <div class="site-footer__links">
+          <a href="#overview">Documentation hub</a>
+          <a href="../docs">API references</a>
+          <a href="../examples">Pattern vault</a>
+        </div>
+        <p class="site-footer__meta">&copy; <span id="copyright-year"></span> SAPL. Reboot responsibly.</p>
+      </div>
     </footer>
-    <script src="assets/app.js"></script>
+    <script src="assets/app.js" defer></script>
   </body>
 </html>

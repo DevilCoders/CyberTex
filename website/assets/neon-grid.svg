@@ -1,0 +1,18 @@
+<svg width="800" height="800" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6dfcff" stop-opacity="0.45" />
+      <stop offset="50%" stop-color="#45d1ff" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#ff6df2" stop-opacity="0.25" />
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="800" height="800" fill="none" stroke="url(#glow)" stroke-width="0.75" opacity="0.25" />
+  <g stroke="url(#glow)" stroke-width="0.75" opacity="0.35">
+    <path d="M0 80h800M0 160h800M0 240h800M0 320h800M0 400h800M0 480h800M0 560h800M0 640h800M0 720h800" />
+    <path d="M80 0v800M160 0v800M240 0v800M320 0v800M400 0v800M480 0v800M560 0v800M640 0v800M720 0v800" />
+  </g>
+  <g stroke="#6dfcff" stroke-width="1.6" opacity="0.4">
+    <path d="M0 0l800 800" />
+    <path d="M800 0L0 800" />
+  </g>
+</svg>

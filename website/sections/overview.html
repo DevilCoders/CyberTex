@@ -1,0 +1,168 @@
+<section class="doc-section">
+  <header>
+    <p class="doc-section__eyebrow">Holofile // 01</p>
+    <h2>The SAPL lattice</h2>
+    <p>
+      SAPL describes security automations as collaborative meshes of declarative manifests, policy
+      probes, and verifiable evidence. In the 2050 control room, everything is observable,
+      forkable, and remixable without leaving the console.
+    </p>
+  </header>
+  <div class="doc-grid">
+    <article class="doc-card">
+      <header>
+        <p class="doc-card__label">Quantum brief</p>
+        <h3>Composable manifests</h3>
+      </header>
+      <p>
+        Merge YAML-driven strategies with Python hooks and simulation traces. SAPL manifests are
+        versioned alongside the runtime so you can diff policy drift before enforcement.
+      </p>
+      <figure>
+        <img src="../assets/quantum-core.svg" alt="Futuristic orbit lines forming a lattice" />
+        <figcaption>Orbit view of linked policy nodes.</figcaption>
+      </figure>
+    </article>
+    <article class="doc-card">
+      <header>
+        <p class="doc-card__label">Field log</p>
+        <h3>Realtime documentation</h3>
+      </header>
+      <p>
+        Every run emits a Markdown dossier enriched with command histories, remediation hints, and
+        data plane snapshots. Share the hologram or embed it straight into your SOC dashboard.
+      </p>
+      <figure>
+        <img src="../assets/holo-lab.svg" alt="Heads-up display of SAPL run metrics" />
+        <figcaption>HUD overlay from the runtime feed.</figcaption>
+      </figure>
+    </article>
+  </div>
+  <div class="doc-sandbox">
+    <h3>Bootstrap the lattice</h3>
+    <p>
+      Start with a dual-mode playbook that can run in air-gapped labs or satellite-linked fleets. Use
+      policies to define trust zones and quantum toggles for experimental modules.
+    </p>
+    <pre
+      data-interactive
+      data-language="python"
+      data-command="sapl run bootstrap.sapl --env neo-lab"
+      data-output="$ sapl run bootstrap.sapl --env neo-lab\n✓ policy mesh synced\n✓ 4 nodes attested\n✓ documentation hologram exported to /exports/neo-lab"
+    >
+from sapl.playbook import Playbook
+from sapl.policies import Policy, Guard
+from sapl.runtime import emitter
+
+mesh = Playbook(
+    id="neo.bootstrap",
+    description="Cold-start quantum lab clusters with zero-drift policies",
+    steps=[
+        "inventory.fleet.scan",
+        "inventory.fleet.classify",
+        "remediation.patch.orchestrate"
+    ],
+)
+
+trust_policy = Policy(
+    id="neo.trust",
+    guards=[
+        Guard.verified_signature(),
+        Guard.drift_within(ppm=8),
+        Guard.latency_budget(ms=12)
+    ],
+)
+
+@mesh.on_success
+def publish(evidence):
+    emitter.stream(
+        channel="sapl://hologram/neo",
+        payload=evidence.attach_render(template="darkgrid")
+    )
+
+mesh.apply(trust_policy)
+mesh.export("bootstrap.sapl")
+    </pre>
+    <p class="doc-hint">
+      Tip: toggle <strong>Wrap</strong> to inspect long payloads or hit <strong>Run</strong> to simulate
+      the holographic terminal output.
+    </p>
+  </div>
+</section>
+<section class="doc-section">
+  <header>
+    <p class="doc-section__eyebrow">Holofile // 02</p>
+    <h2>Documentation engines</h2>
+    <p>
+      The built-in documentation renderer synthesises Mermaid diagrams, policy verdicts, and structured
+      changelogs. Use it to ship self-explaining runbooks that look like they came from a 2050 SOC.
+    </p>
+  </header>
+  <div class="doc-grid doc-grid--triple">
+    <article class="doc-card">
+      <header>
+        <p class="doc-card__label">Generator</p>
+        <h3>Markdown + holograms</h3>
+      </header>
+      <p>
+        Feed Markdown fragments into <code>sapl.doc.generate()</code> to embed live code previews,
+        Mermaid diagrams, and diff visualisations.
+      </p>
+    </article>
+    <article class="doc-card">
+      <header>
+        <p class="doc-card__label">Telemetry</p>
+        <h3>Semantic logging</h3>
+      </header>
+      <p>
+        Structured logs flow into the doc stream with auto-tagged events, timeline overlays, and
+        threat hunt annotations.
+      </p>
+    </article>
+    <article class="doc-card">
+      <header>
+        <p class="doc-card__label">Distribution</p>
+        <h3>One-click portals</h3>
+      </header>
+      <p>
+        Publish as static portals, interactive consoles, or signed PDFs with tamper detection.
+      </p>
+    </article>
+  </div>
+  <pre
+    data-interactive
+    data-language="yaml"
+    data-command="sapl docs render docs.yaml --format portal"
+    data-output="$ sapl docs render docs.yaml --format portal\n✓ compiled 6 chapters\n✓ embedded 3 mermaid diagrams\n✓ published at https://sapl.local/portal"
+  >
+documentation:
+  id: nx2050-lattice
+  title: "NX-2050 Automation Codex"
+  cover:
+    gradient: plasma
+    badge: "quantum-trust"
+  chapters:
+    - id: boot
+      source: ./docs/bootstrap.md
+      sandbox:
+        command: sapl run bootstrap.sapl --env neo-lab
+    - id: drift
+      source: ./docs/drift-response.md
+      visualisations:
+        - mermaid: ./graphs/drift-loop.mmd
+    - id: evidence
+      source: ./docs/evidence.md
+      export:
+        format: pdf
+        signature: on
+  distribution:
+    channels:
+      - type: static-site
+        target: ./dist/portal
+      - type: hologram
+        target: sapl://display/deck-7
+  meta:
+    maintainer: "orbital-ops@sapl.io"
+    refresh: 4h
+  </pre>
+</section>

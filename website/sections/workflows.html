@@ -1,10 +1,93 @@
-<article>
-  <h2>Operational Workflows</h2>
-  <p>Combine SAPL components to deliver consistent, auditable security operations.</p>
-  <ol>
-    <li>Prototype new playbooks in <code>sapl shell</code> with live variables.</li>
-    <li>Validate structure using <code>sapl inspect --json</code> and commit results to CI.</li>
-    <li>Publish curated documentation to the advanced website and share with stakeholders.</li>
-  </ol>
-  <p>Find end-to-end recipes in <code>WORKFLOWS.md</code>.</p>
-</article>
+<section class="doc-section">
+  <header>
+    <p class="doc-section__eyebrow">Workflows // 01</p>
+    <h2>Hypergraph orchestration</h2>
+    <p>
+      SAPL workflows choreograph layered responses across hybrid clouds, edge clusters, and orbital
+      relays. Blend deterministic policy nodes with adaptive machine actors.
+    </p>
+  </header>
+  <div class="doc-grid doc-grid--balanced">
+    <article class="doc-card">
+      <header>
+        <p class="doc-card__label">Mesh</p>
+        <h3>Branching logic</h3>
+      </header>
+      <p>
+        Compose conditional stages, sentinel checks, and fallback paths to guarantee resilience even
+        when endpoints disappear.
+      </p>
+    </article>
+    <article class="doc-card">
+      <header>
+        <p class="doc-card__label">Observability</p>
+        <h3>Live diffs</h3>
+      </header>
+      <p>
+        Every execution emits drift diffs, compliance flags, and doc fragments so leadership can review
+        outcomes in a single stream.
+      </p>
+    </article>
+  </div>
+  <pre
+    data-interactive
+    data-language="yaml"
+    data-command="sapl run response.yaml --track drift"
+    data-output="$ sapl run response.yaml --track drift\n✓ 12 stages completed\n✓ drift delta: 0.4ppm\n✓ docs synced to mission feed"
+  >
+workflow:
+  id: orbital-response
+  entry: detect-drift
+  stages:
+    detect-drift:
+      action: detectors.drift.sentinel
+      on_success: branch-scope
+      on_failure: escalate
+    branch-scope:
+      parallel:
+        - action: remediation.patch.dispatch
+        - action: observability.snapshot.capture
+      on_success: attest
+    escalate:
+      action: comms.notify.bridge
+      params:
+        channel: "mission-control"
+      on_success: attest
+    attest:
+      action: docs.emit.hologram
+      params:
+        template: "deck-9"
+        include:
+          - drift-report
+          - remediation-log
+  telemetry:
+    record: true
+    redact:
+      - secrets.api_keys
+  policies:
+    - guards.zero_trust
+    - guards.latency["<20ms"]
+  </pre>
+</section>
+<section class="doc-section">
+  <header>
+    <p class="doc-section__eyebrow">Workflows // 02</p>
+    <h2>Temporal simulations</h2>
+    <p>
+      Generate time-shifted simulations to validate workflow outcomes across historic baselines and
+      future projections. Export the results directly into the documentation hub.
+    </p>
+  </header>
+  <pre
+    data-interactive
+    data-language="bash"
+    data-command="sapl workflow simulate orbital-response --profile timewarp"
+    data-output="$ sapl workflow simulate orbital-response --profile timewarp\n✓ generated 48 projections\n✓ detected 0 policy regressions\n✓ published simulation dossier"
+  >
+$ sapl workflow simulate orbital-response --profile timewarp \
+    --baseline "2024-04-12T09:00Z" \
+    --future "+18h" \
+    --export docs/simulations/orbital-response.md
+$ sapl docs open docs/simulations/orbital-response.md
+  </pre>
+</section>

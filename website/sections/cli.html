@@ -1,10 +1,98 @@
-<article>
-  <h2>Command Line Highlights</h2>
-  <p>The SAPL CLI combines familiar ergonomics with task-specific enhancements:</p>
-  <ul>
-    <li><strong>Inspect</strong>: Analyse script structure without execution, generating JSON for pipelines.</li>
-    <li><strong>Shell</strong>: Iterate interactively with stateful execution and plugin support.</li>
-    <li><strong>Website</strong>: Export or serve the bundled static documentation portal.</li>
-  </ul>
-  <p>Use the <code>--json</code> flag on any command that supports it to integrate with CI and dashboards.</p>
-</article>
+<section class="doc-section">
+  <header>
+    <p class="doc-section__eyebrow">Console // 01</p>
+    <h2>CLI warp commands</h2>
+    <p>
+      The SAPL CLI ships with hyperspeed tooling for scaffold, testing, and publishing automations.
+      Use composable command packs to script everything from zero-touch onboarding to post-incident
+      drills.
+    </p>
+  </header>
+  <div class="doc-grid doc-grid--balanced">
+    <article class="doc-card">
+      <header>
+        <p class="doc-card__label">Bootstrap</p>
+        <h3>Quantum init</h3>
+      </header>
+      <p>
+        Spin up an environment with attestation policies, doc renderers, and sandbox templates in less
+        than 5 seconds.
+      </p>
+    </article>
+    <article class="doc-card">
+      <header>
+        <p class="doc-card__label">Simulation</p>
+        <h3>Drift drill</h3>
+      </header>
+      <p>
+        Replay security incidents across multiple time slices and compare documentation side-by-side
+        using <code>sapl timeline</code> snapshots.
+      </p>
+    </article>
+  </div>
+  <pre
+    data-interactive
+    data-language="bash"
+    data-command="sapl init neo-lab --modules policies docs sandbox"
+    data-output="$ sapl init neo-lab --modules policies docs sandbox\n✓ created manifests/neo.yaml\n✓ seeded docs/overview.md\n✓ wired sandbox workflows"
+  >
+$ sapl init neo-lab --modules policies docs sandbox
+$ sapl sandbox launch neo-lab --auto-approve
+$ sapl timeline capture neo-lab --label "midnight-drill"
+  </pre>
+</section>
+<section class="doc-section">
+  <header>
+    <p class="doc-section__eyebrow">Console // 02</p>
+    <h2>Hybrid scripting</h2>
+    <p>
+      Combine CLI pipelines with inline scripting to automate release management. The <code>sapl cli</code>
+      module exposes a programmable interface for orchestrating commands and parsing structured output.
+    </p>
+  </header>
+  <div class="doc-grid">
+    <article class="doc-card">
+      <header>
+        <p class="doc-card__label">Automation script</p>
+        <h3>Python orchestration</h3>
+      </header>
+      <p>
+        Build hybrid automations that shell out to the CLI, verify telemetry, and publish runbooks from
+        a single script.
+      </p>
+    </article>
+    <article class="doc-card">
+      <header>
+        <p class="doc-card__label">Sandbox</p>
+        <h3>Test &amp; attest</h3>
+      </header>
+      <p>
+        Configure CLI sandboxes to emit signed attestations so your compliance bot can ingest them
+        instantly.
+      </p>
+    </article>
+  </div>
+  <pre
+    data-interactive
+    data-language="python"
+    data-command="python scripts/release.py --fleet edge-alpha"
+    data-output="$ python scripts/release.py --fleet edge-alpha\n> sapl lint manifests/edge-alpha.yaml\n✓ 0 policy violations\n> sapl publish docs --channel hologram\n✓ hologram deployed to deck-9"
+  >
+from sapl.cli import command
+from sapl.telemetry import capture
+
+@command.pipeline()
+def release(fleet: str):
+    command.run(["sapl", "lint", f"manifests/{fleet}.yaml"], capture="json")
+    capture.metric("lint.ok", value=True)
+
+    with command.section("Render docs"):
+        command.run(["sapl", "docs", "render", "docs.yaml", "--format", "portal"])
+        command.run(["sapl", "publish", "docs", "--channel", "hologram"])
+
+    command.run(["sapl", "timeline", "capture", fleet, "--label", "release"], capture="md")
+
+if __name__ == "__main__":
+    command.launch(release)
+  </pre>
+</section>

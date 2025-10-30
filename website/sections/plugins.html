@@ -1,10 +1,91 @@
-<article>
-  <h2>Plugin Ecosystem</h2>
-  <p>Extend SAPL by registering Python plugins that customise the interpreter.</p>
-  <ul>
-    <li>Expose new builtins that wrap internal tooling or ticketing systems.</li>
-    <li>Inspect the active plugin set from the shell via <code>:state</code>.</li>
-    <li>Bundle plugins in Python packages and load them with <code>--plugin-dir</code>.</li>
-  </ul>
-  <p>Consult the comprehensive <code>PLUGIN_ARCHITECTURE.md</code> guide for patterns and safeguards.</p>
-</article>
+<section class="doc-section">
+  <header>
+    <p class="doc-section__eyebrow">Plugins // 01</p>
+    <h2>Neural plugin cores</h2>
+    <p>
+      Extend SAPL with machine-guided remediation, policy translators, or telemetry packagers. Plugins
+      run in hardened sandboxes and surface interactive docs with every deployment.
+    </p>
+  </header>
+  <div class="doc-grid">
+    <article class="doc-card">
+      <header>
+        <p class="doc-card__label">Classifier</p>
+        <h3>Threat genome</h3>
+      </header>
+      <p>
+        Map runtime events against curated intel feeds and generate annotated reports inside the
+        documentation stream.
+      </p>
+    </article>
+    <article class="doc-card">
+      <header>
+        <p class="doc-card__label">Transcoder</p>
+        <h3>Policy adapters</h3>
+      </header>
+      <p>
+        Transform SAPL manifests into Terraform, Ansible, or native cloud guardrails while preserving
+        provenance metadata.
+      </p>
+    </article>
+  </div>
+  <pre
+    data-interactive
+    data-language="typescript"
+    data-command="sapl plugins build threat-genome && sapl plugins deploy threat-genome"
+    data-output="$ sapl plugins build threat-genome\n✓ compiled wasm target\n$ sapl plugins deploy threat-genome\n✓ signed and deployed to mesh"
+  >
+import { definePlugin } from "sapl/plugin";
+import { Evidence } from "sapl/evidence";
+
+export default definePlugin({
+  id: "labs.threat-genome",
+  version: "2.5.0",
+  capabilities: ["telemetry", "docs"],
+  async onEvent(event, context) {
+    const severity = context.ml.classify(event.payload, "threat/genome");
+    const evidence = Evidence.fragment({
+      title: `Genome classification: ${event.id}`,
+      severity,
+      indicators: context.ml.explain(event.payload)
+    });
+
+    context.docs.append(evidence.render("neon"));
+    if (severity === "critical") {
+      await context.remediation.enqueue("incident://containment", event.payload);
+    }
+  },
+});
+  </pre>
+</section>
+<section class="doc-section">
+  <header>
+    <p class="doc-section__eyebrow">Plugins // 02</p>
+    <h2>Secure distribution</h2>
+    <p>
+      Package plugins with signed metadata, reproducible builds, and inline documentation previews so
+      operators can trust every deployment.
+    </p>
+  </header>
+  <pre
+    data-interactive
+    data-language="toml"
+    data-command="sapl plugins sign manifest.toml --key quantum-ops"
+    data-output="$ sapl plugins sign manifest.toml --key quantum-ops\n✓ signature embedded\n✓ attestations refreshed"
+  >
+[plugin]
+id = "labs.threat-genome"
+entry = "dist/index.wasm"
+runtime = "wasmtime"
+
+[docs]
+readme = "./README.md"
+preview = "./docs/preview.md"
+sandbox = "sapl sandbox launch genome --with-ml"
+
+[distribution]
+signing_key = "quantum-ops"
+channels = ["registry://sapl/plugins", "sapl://mesh/neo"]
+attestations = true
+  </pre>
+</section>

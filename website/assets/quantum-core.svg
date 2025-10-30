@@ -1,0 +1,20 @@
+<svg width="360" height="240" viewBox="0 0 360 240" xmlns="http://www.w3.org/2000/svg" role="img">
+  <defs>
+    <radialGradient id="coreGlow" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#6dfcff" stop-opacity="0.9" />
+      <stop offset="70%" stop-color="#45d1ff" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#020409" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="360" height="240" fill="#060914" rx="24" />
+  <circle cx="180" cy="120" r="100" fill="url(#coreGlow)" opacity="0.6" />
+  <g stroke="#6dfcff" stroke-opacity="0.65" stroke-width="2" fill="none">
+    <ellipse cx="180" cy="120" rx="120" ry="52" />
+    <ellipse cx="180" cy="120" rx="90" ry="98" transform="rotate(32 180 120)" />
+    <ellipse cx="180" cy="120" rx="90" ry="98" transform="rotate(-32 180 120)" />
+  </g>
+  <circle cx="180" cy="120" r="12" fill="#ff6df2" />
+  <g stroke="#ff6df2" stroke-width="1.2" stroke-linecap="round">
+    <path d="M180 18v36M342 120h-36M180 222v-36M18 120h36" opacity="0.4" />
+  </g>
+</svg>
