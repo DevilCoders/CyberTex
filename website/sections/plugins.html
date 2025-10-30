@@ -1,10 +1,49 @@
-<article>
-  <h2>Plugin Ecosystem</h2>
-  <p>Extend SAPL by registering Python plugins that customise the interpreter.</p>
-  <ul>
-    <li>Expose new builtins that wrap internal tooling or ticketing systems.</li>
-    <li>Inspect the active plugin set from the shell via <code>:state</code>.</li>
-    <li>Bundle plugins in Python packages and load them with <code>--plugin-dir</code>.</li>
-  </ul>
-  <p>Consult the comprehensive <code>PLUGIN_ARCHITECTURE.md</code> guide for patterns and safeguards.</p>
+<article class="prose">
+  <header class="prose__header">
+    <p class="eyebrow">Plugin Ecosystem</p>
+    <h2>Compose bespoke automation by extending the interpreter</h2>
+    <p>
+      Plugins unlock contextual awareness. Register custom builtins that expose enterprise
+      APIs, ticketing flows, or hardware integrations while inheriting SAPL's guardrails.
+    </p>
+  </header>
+  <div class="feature-grid feature-grid--three">
+    <section class="card card--border">
+      <h3>Flexible packaging</h3>
+      <p>
+        Distribute plugins with Python packages, wheels, or Git repositories. Operators point
+        the CLI at <code>--plugin-dir</code> or configure discovery via <code>pyproject.toml</code>.
+      </p>
+      <ul class="inline-tags">
+        <li>Namespace isolation</li>
+        <li>Signed artifacts</li>
+        <li>Version pinning</li>
+      </ul>
+    </section>
+    <section class="card card--border">
+      <h3>Runtime introspection</h3>
+      <p>
+        Use <code>:state</code> in the interactive shell to inspect loaded plugins, exported
+        commands, and permission models. Telemetry feeds the website for auditability.
+      </p>
+      <div class="callout callout--muted">
+        <p>
+          Combine human approvals with automated escalation. SAPL records rationale alongside
+          each privileged execution path.
+        </p>
+      </div>
+    </section>
+    <section class="card card--border">
+      <h3>Safety patterns</h3>
+      <p>
+        Author plugins with built-in validation hooks and circuit breakers. Preflight actions
+        to verify environment posture before running expensive or destructive steps.
+      </p>
+      <ul class="checklist">
+        <li>Audit logging for every privileged call</li>
+        <li>Structured retries with backoff</li>
+        <li>Mandatory approvals for sensitive modules</li>
+      </ul>
+    </section>
+  </div>
 </article>

@@ -1,10 +1,42 @@
-<article>
-  <h2>Command Line Highlights</h2>
-  <p>The SAPL CLI combines familiar ergonomics with task-specific enhancements:</p>
-  <ul>
-    <li><strong>Inspect</strong>: Analyse script structure without execution, generating JSON for pipelines.</li>
-    <li><strong>Shell</strong>: Iterate interactively with stateful execution and plugin support.</li>
-    <li><strong>Website</strong>: Export or serve the bundled static documentation portal.</li>
-  </ul>
-  <p>Use the <code>--json</code> flag on any command that supports it to integrate with CI and dashboards.</p>
+<article class="prose">
+  <header class="prose__header">
+    <p class="eyebrow">Command Line</p>
+    <h2>Ship reliable automations from a single ergonomic interface</h2>
+    <p>
+      The SAPL CLI wraps Python tooling with workflow primitives, rich introspection, and a
+      local sandbox. Operators prototype, harden, and publish playbooks without context
+      switching.
+    </p>
+  </header>
+  <div class="feature-grid">
+    <section class="card card--border">
+      <h3>Mode aware execution</h3>
+      <p>
+        Switch between <strong>inspect</strong>, <strong>shell</strong>, and <strong>deploy</strong>
+        modes using consistent flags. Structured JSON output powers CI/CD pipelines and observability.
+      </p>
+      <ul class="checklist">
+        <li>Deterministic dry runs for red team approvals</li>
+        <li>Live variable editing with stateful sessions</li>
+        <li>Human friendly summaries alongside machine data</li>
+      </ul>
+    </section>
+    <section class="card card--border">
+      <h3>Integrated QA</h3>
+      <p>
+        Built-in linting enforces guardrails around privileged actions. Inline diffs highlight
+        changes to secrets, credentials, and execution flow before deployment.
+      </p>
+      <div class="code-snippet">
+        <pre><code>$ sapl inspect playbook.yaml --json \ 
+  | jq '.checks[] | select(.status != "pass")'</code></pre>
+      </div>
+    </section>
+  </div>
+  <footer class="prose__footer">
+    <p>
+      Tip: Use <code>sapl website --serve</code> to regenerate this documentation with live updates
+      as you iterate. Publish the static bundle to your knowledge base in one command.
+    </p>
+  </footer>
 </article>
