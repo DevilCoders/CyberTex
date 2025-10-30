@@ -1,10 +1,41 @@
-<article>
-  <h2>Operational Workflows</h2>
-  <p>Combine SAPL components to deliver consistent, auditable security operations.</p>
-  <ol>
-    <li>Prototype new playbooks in <code>sapl shell</code> with live variables.</li>
-    <li>Validate structure using <code>sapl inspect --json</code> and commit results to CI.</li>
-    <li>Publish curated documentation to the advanced website and share with stakeholders.</li>
-  </ol>
-  <p>Find end-to-end recipes in <code>WORKFLOWS.md</code>.</p>
+<article class="prose">
+  <header class="prose__header">
+    <p class="eyebrow">Workflows</p>
+    <h2>Design auditable, end-to-end security operations</h2>
+    <p>
+      SAPL workflows codify organisational knowledge. Blend automation with human approvals
+      to deliver consistent playbooks across detection, response, and proactive testing.
+    </p>
+  </header>
+  <section class="timeline">
+    <div class="timeline__item">
+      <h3>Prototype rapidly</h3>
+      <p>
+        Iterate in <code>sapl shell</code> with live data. Use watch mode to reload plugins when
+        underlying Python modules change.
+      </p>
+    </div>
+    <div class="timeline__item">
+      <h3>Validate collaboratively</h3>
+      <p>
+        Run <code>sapl inspect --json</code> to produce machine readable manifests. Teams review
+        diffs inline and sign off on guardrails before production rollout.
+      </p>
+    </div>
+    <div class="timeline__item">
+      <h3>Operationalise safely</h3>
+      <p>
+        Deploy workflows with scheduled runs or event driven triggers. Every invocation is
+        logged, immutable, and exportable to SIEM platforms.
+      </p>
+    </div>
+  </section>
+  <section class="callout callout--accent">
+    <h3>Documentation as a service</h3>
+    <p>
+      Publish the advanced website to give stakeholders a live view into workflows, controls,
+      and escalation paths. QR codes embedded in runbooks link to the exact section on this
+      site, streamlining audits and post-incident reviews.
+    </p>
+  </section>
 </article>

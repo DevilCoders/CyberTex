@@ -4,29 +4,230 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>SAPL Advanced Website</title>
+    <meta
+      name="description"
+      content="Explore the SAPL automation ecosystem with interactive documentation, workflow overviews, and plugin guidance."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="assets/styles.css" />
   </head>
   <body>
-    <header class="hero">
-      <div class="hero__content">
-        <h1>SAPL Advanced Platform</h1>
-        <p>Purpose-built tooling for cybersecurity researchers, red teams, and automation specialists.</p>
-        <nav class="hero__nav">
-          <button data-section="sections/cli.html">CLI</button>
-          <button data-section="sections/plugins.html">Plugins</button>
-          <button data-section="sections/workflows.html">Workflows</button>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand" href="#overview" aria-label="SAPL Advanced Website home">
+          <span class="brand__mark" aria-hidden="true">⚡</span>
+          <span class="brand__text">SAPL Advanced</span>
+        </a>
+        <nav class="site-nav" aria-label="Documentation navigation" role="tablist">
+          <button
+            class="site-nav__button"
+            type="button"
+            id="tab-overview"
+            role="tab"
+            data-section="sections/overview.html"
+            data-slug="overview"
+            aria-controls="content"
+          >
+            Overview
+          </button>
+          <button
+            class="site-nav__button"
+            type="button"
+            id="tab-cli"
+            role="tab"
+            data-section="sections/cli.html"
+            data-slug="cli"
+            aria-controls="content"
+          >
+            CLI
+          </button>
+          <button
+            class="site-nav__button"
+            type="button"
+            id="tab-plugins"
+            role="tab"
+            data-section="sections/plugins.html"
+            data-slug="plugins"
+            aria-controls="content"
+          >
+            Plugins
+          </button>
+          <button
+            class="site-nav__button"
+            type="button"
+            id="tab-workflows"
+            role="tab"
+            data-section="sections/workflows.html"
+            data-slug="workflows"
+            aria-controls="content"
+          >
+            Workflows
+          </button>
         </nav>
+        <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false">
+          <span class="theme-toggle__icon" aria-hidden="true">🌙</span>
+          <span class="theme-toggle__label">Toggle theme</span>
+        </button>
       </div>
     </header>
-    <main id="content" class="content">
-      <article>
-        <h2>Welcome</h2>
-        <p>Select a section above to explore the SAPL ecosystem.</p>
-        <p>The CLI, runtime, and plugin guides are synchronised with the Markdown documents found in <code>comprehensive_docs/</code>.</p>
-      </article>
+    <main class="page">
+      <section class="hero">
+        <div class="hero__inner">
+          <div class="hero__copy">
+            <p class="eyebrow">Security Automation Playbook Language</p>
+            <h1>Operate faster with trustworthy automation</h1>
+            <p>
+              SAPL blends procedural knowledge with guardrails so teams can automate safely and
+              publish documentation that stakeholders actually use.
+            </p>
+            <div class="hero__actions">
+              <a class="button button--primary" href="#overview">Explore platform</a>
+              <a class="button button--ghost" href="../comprehensive_docs" target="_blank" rel="noreferrer">
+                Read docs
+              </a>
+            </div>
+          </div>
+          <div class="hero__visual">
+            <div class="hero__orb" aria-hidden="true"></div>
+            <div class="hero__card">
+              <h2>Pipeline snapshot</h2>
+              <ul>
+                <li><span>12</span> Active playbooks</li>
+                <li><span>6</span> Pending approvals</li>
+                <li><span>42</span> Automated checks</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="metrics" aria-label="Highlights">
+        <article class="metric">
+          <h3>Declarative automation</h3>
+          <p>Author playbooks as code with policy aware guardrails and explainable output.</p>
+        </article>
+        <article class="metric">
+          <h3>Integrated governance</h3>
+          <p>Capture approvals, rationale, and evidence as part of every execution trace.</p>
+        </article>
+        <article class="metric">
+          <h3>Insights anywhere</h3>
+          <p>Export dashboards or publish static sites so stakeholders stay informed.</p>
+        </article>
+      </section>
+      <section class="knowledge">
+        <div class="content-pane" role="presentation">
+          <div class="content-pane__loader" hidden aria-hidden="true">
+            <span class="content-pane__shimmer"></span>
+            <span class="visually-hidden">Loading content…</span>
+          </div>
+          <div
+            class="content-pane__body"
+            id="content"
+            role="tabpanel"
+            tabindex="-1"
+            aria-live="polite"
+            aria-busy="false"
+            aria-labelledby="tab-overview"
+          >
+            <article class="prose">
+              <header class="prose__header">
+                <h2>Welcome to the SAPL knowledge portal</h2>
+                <p>Select a section above to explore the ecosystem.</p>
+              </header>
+              <p>
+                The CLI, runtime, and plugin guides are synchronised with the Markdown documents in
+                <code>comprehensive_docs/</code>. Choose a tab to load contextual guidance without leaving
+                this page.
+              </p>
+            </article>
+          </div>
+        </div>
+        <aside class="sidebar" aria-label="Quick facts">
+          <h2>Quick facts</h2>
+          <dl>
+            <div>
+              <dt>Language</dt>
+              <dd>Python &amp; YAML mixins</dd>
+            </div>
+            <div>
+              <dt>Focus</dt>
+              <dd>Security &amp; automation</dd>
+            </div>
+            <div>
+              <dt>Runtime</dt>
+              <dd>Deterministic sandbox</dd>
+            </div>
+            <div>
+              <dt>Docs</dt>
+              <dd>Static, searchable bundle</dd>
+            </div>
+          </dl>
+          <div class="sidebar__cta">
+            <p>Looking to contribute?</p>
+            <a class="button button--secondary" href="https://github.com" target="_blank" rel="noreferrer"
+              >Open the repository</a
+            >
+          </div>
+        </aside>
+      </section>
+      <section class="capabilities" aria-label="Platform capabilities">
+        <h2 class="capabilities__title">Build resilient cyber operations</h2>
+        <div class="capabilities__grid">
+          <article class="capability">
+            <h3>Composable building blocks</h3>
+            <p>Mix reusable actions, environment adapters, and policies to model complex tactics.</p>
+          </article>
+          <article class="capability">
+            <h3>Human-in-the-loop workflows</h3>
+            <p>Route approvals to decision makers automatically with context pulled from plugins.</p>
+          </article>
+          <article class="capability">
+            <h3>Automation with observability</h3>
+            <p>Trace every command, parameter, and output to satisfy audit and compliance needs.</p>
+          </article>
+          <article class="capability">
+            <h3>Secure extensibility</h3>
+            <p>Sandbox plugin execution and enforce runtime permissions without sacrificing speed.</p>
+          </article>
+        </div>
+      </section>
+      <section class="cta" aria-label="Call to action">
+        <div class="cta__inner">
+          <h2>Ready to try SAPL in your environment?</h2>
+          <p>Use the CLI to bootstrap a project, then publish this website bundle for your teams.</p>
+          <a class="button button--primary" href="../README.md" target="_blank" rel="noreferrer">Get started</a>
+        </div>
+      </section>
     </main>
     <footer class="footer">
-      <p>Generated with ❤️ by the SAPL toolchain. Use <code>sapl website --serve</code> to preview locally.</p>
+      <div class="footer__grid">
+        <div>
+          <p class="footer__brand">SAPL Advanced Website</p>
+          <p>Generated with ❤️ by the SAPL toolchain. Use <code>sapl website --serve</code> to preview locally.</p>
+        </div>
+        <div>
+          <h2>Resources</h2>
+          <ul>
+            <li><a href="../README.md" target="_blank" rel="noreferrer">Project README</a></li>
+            <li><a href="../docs" target="_blank" rel="noreferrer">Docs directory</a></li>
+            <li><a href="../tests" target="_blank" rel="noreferrer">Test suites</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Support</h2>
+          <ul>
+            <li><a href="mailto:security@example.com">security@example.com</a></li>
+            <li><a href="#workflows">Workflow guides</a></li>
+            <li><a href="#plugins">Plugin registry</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer__legal">© <span id="copyright-year"></span> SAPL Contributors. All rights reserved.</p>
     </footer>
     <script src="assets/app.js"></script>
   </body>
